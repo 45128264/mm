@@ -1,0 +1,23 @@
+{
+    "name": "qyk/mm",
+    "description": "hello world",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "qyk",
+            "email": "450128264@qq.com",
+            "homepage": "https://github.com/450128264",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Qyk\\Mm": "src"
+        }
+    }
+}
