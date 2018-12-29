@@ -1,10 +1,10 @@
 <?php
 
-use Qyk\Mm\RouterFactory;
+use Qyk\Mm\RouterRegister;
 
-RouterFactory::group([], function () {
-    RouterFactory::post();
-    RouterFactory::post();
-    RouterFactory::post();
-    RouterFactory::post();
+RouterRegister::group([], function () {
+    RouterRegister::post();
+    RouterRegister::post();
+    RouterRegister::post();
+    RouterRegister::post();
 });

@@ -87,6 +87,6 @@ class RouterProvider extends Router
      */
     public function execute()
     {
-
+        echo 'sfs';exit;
     }
 }

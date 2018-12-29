@@ -12,11 +12,7 @@ use Qyk\Mm\Provider\ErrorEventListenerProvide;
  */
 class Stage
 {
-    /**
-     * 实例化
-     * @var Stage
-     */
-    private static $instance;
+    use Singleton;
 
     /**
      * 异常监控
@@ -31,14 +27,13 @@ class Stage
 
     private function __construct()
     {
-
     }
 
     /**
      * @param string $appName
      * @param string $appDirPath
      */
-    public function define(string $appName, string $appDirPath)
+    protected function define(string $appName, string $appDirPath)
     {
         defined('APP_NAME') || define('APP_NAME', $appName);
         defined('APP_PATH') || define('APP_PATH', $appDirPath);
@@ -46,14 +41,12 @@ class Stage
     }
 
     /**
-     *
+     * 返回app
+     * @return Application
      */
-    public static function instance()
+    public static function app()
     {
-        if (!self::$instance) {
-            self::$instance = new static();
-        }
-        return self::$instance;
+        return self::$instance->app;
     }
 
     /**
@@ -70,12 +63,19 @@ class Stage
      * @param Application $application
      * @return Facade\Response
      */
-    public function make(Application $application)
+    public function make(Application $application, $appName, $appPath)
     {
         $this->addErrorListener();
+        $this->define($appName, $appPath);
+        //region initApp
+        $initApp = function () {
+            $this->init();
+        };
+        $initApp->call($application);
+        //endregion
         $this->app = $application;
         $this->app->router->execute();
-        return $application->response;
+        return $this->app->response;
     }
 
     /**
