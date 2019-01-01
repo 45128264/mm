@@ -13,8 +13,20 @@ use Closure;
  */
 class Router
 {
+    /**
+     * uri
+     * @var string
+     */
     protected $uri;
+    /**
+     * 对应路由对应得请求类型
+     * @var array
+     */
     protected $methods;
+    /**
+     * 路由详情
+     * @var array
+     */
     protected $action;
     protected $defaults;
     protected $parameters;
@@ -29,12 +41,22 @@ class Router
      * @var array
      */
     protected $namespace = [];
+    /**
+     * 路由容器
+     * @var RouterContainer
+     */
+    protected $container;
+    /**
+     * uri解析出来的参数
+     * @var []
+     */
+    protected $uriParams;
 
     /**
      * 实例化一个路由
      * Router constructor.
-     * @param array|string  $methods
-     * @param string        $uri
+     * @param array|string $methods
+     * @param string $uri
      * @param Closure|array $action
      */
     public function __construct($methods, string $uri, $action)
@@ -142,5 +164,20 @@ class Router
     public function alias(string $as)
     {
         $this->action['as'] = $as;
+        $this->container->setAlias($as, $this);
+    }
+
+    public function setContainer(RouterContainer $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * 设置uri解析出来的参数
+     * @param array $params
+     */
+    public function setUriParams(array $params)
+    {
+        $this->uriParams = $params;
     }
 }
