@@ -20,6 +20,14 @@ trait Singleton
      */
     private static $instance;
 
+    /**
+     * 防止被new
+     * Singleton constructor.
+     */
+    protected function __construct()
+    {
+
+    }
 
     /**
      * 单态实例化

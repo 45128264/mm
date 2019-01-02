@@ -75,8 +75,8 @@ class Router
     /**
      * 实例化一个路由
      * Router constructor.
-     * @param array|string  $methods
-     * @param string        $uri
+     * @param array|string $methods
+     * @param string $uri
      * @param Closure|array $action
      */
     public function __construct($methods, string $uri, $action)
@@ -192,6 +192,19 @@ class Router
         $this->container->setAlias($as, $this);
         return $this;
     }
+
+
+    /**
+     * 返回的数据类型
+     * @param string $responseType
+     * @return Router
+     */
+    public function response(string $responseType)
+    {
+        $this->response = $responseType;
+        return $this;
+    }
+
 
     /**
      * 正则条件

@@ -2,8 +2,8 @@
 
 namespace Qyk\Mm;
 
-use Qyk\Mm\Facade\ErrorEventListener;
-use Qyk\Mm\Provider\ErrorEventListenerProvide;
+use Qyk\Mm\Facade\ErrorListener;
+use Qyk\Mm\Provider\ErrorListenerProvide;
 
 /**
  * 舞台
@@ -16,18 +16,14 @@ class Stage
 
     /**
      * 异常监控
-     * @var ErrorEventListener
+     * @var ErrorListener
      */
     private $erroEvenListener;
 
     /**
      * @var Application
      */
-    public $app;
-
-    private function __construct()
-    {
-    }
+    protected $app;
 
     /**
      * @param string $appName 项目名称
@@ -55,15 +51,6 @@ class Stage
     }
 
     /**
-     * 注册异常监控
-     * @param ErrorEventListener $errorEventListener
-     */
-    public function registeErrorEventListener(ErrorEventListener $errorEventListener)
-    {
-        $this->erroEvenListener = $errorEventListener;
-    }
-
-    /**
      * 执行
      * @param Application $application
      */
@@ -80,6 +67,16 @@ class Stage
         $this->app->response->render();
     }
 
+    /**
+     * 注册异常监控
+     * @param ErrorListener $errorEventListener
+     * @return Stage
+     */
+    public function registeErrorEventListener(ErrorListener $errorEventListener)
+    {
+        $this->erroEvenListener = $errorEventListener;
+        return $this;
+    }
 
     /**
      *  异常监控
@@ -87,7 +84,7 @@ class Stage
     private function addErrorListener()
     {
         if (!$this->erroEvenListener) {
-            $this->erroEvenListener = new ErrorEventListenerProvide();
+            $this->erroEvenListener = new ErrorListenerProvide();
         }
         $this->erroEvenListener->listen();
     }
