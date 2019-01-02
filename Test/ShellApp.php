@@ -13,6 +13,11 @@ use Qyk\Mm\Provider\ShellRouterProvider;
  */
 class ShellApp extends Application
 {
+    public function __construct()
+    {
+        defined('IS_CLI') or define('IS_CLI', true);
+    }
+
     protected function getProvider()
     {
         return [
