@@ -30,19 +30,15 @@ class Request
     public function getMethod()
     {
         if (!$this->method) {
-            if ($this->isCli()) {
-                $this->method = 'GET';
-            } else {
-                $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-                if ('POST' == $this->method) {
-                    switch (true) {
-                        //如果使用的是post别名
-                        case $tmp = $_POST[Stage::app()->config->get('http.var_method')] ?? '':
-                            //如果method有重新定义
-                        case $tmp = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '':
-                            $this->method = strtoupper($tmp);
-                            break;
-                    }
+            $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+            if (!$this->isCli() && 'POST' == $this->method) {
+                switch (true) {
+                    //如果使用的是post别名
+                    case $tmp = $_POST[Stage::app()->config->get('http.var_method')] ?? '':
+                        //如果method有重新定义
+                    case $tmp = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? '':
+                        $this->method = strtoupper($tmp);
+                        break;
                 }
             }
         }

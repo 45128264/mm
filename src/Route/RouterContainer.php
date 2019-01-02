@@ -1,11 +1,14 @@
 <?php
 
-namespace Qyk\Mm;
+namespace Qyk\Mm\Route;
+
+use Qyk\Mm\Request;
+use Qyk\Mm\Singleton;
 
 /**
  * 路由容器
  * Class RouterContainer
- * @package Qyk\Mm
+ * @package Qyk\Mm\Route
  */
 class RouterContainer
 {
@@ -44,7 +47,7 @@ class RouterContainer
      */
     protected function addToCollections(Router $router)
     {
-        $uri = $router->getFullUri();
+        $uri = $router->getUri();
         foreach ($router->getMethods() as $method) {
             $this->routers[$method][$uri] = $router;
         }
@@ -77,6 +80,16 @@ class RouterContainer
     }
 
     /**
+     * 初始化
+     */
+    protected function init()
+    {
+        foreach (glob(APP_CONF_PATH . '/routers/*.php') as $file) {
+            require $file;
+        }
+    }
+
+    /**
      *
      */
     public function getActionList()
@@ -99,9 +112,10 @@ class RouterContainer
      */
     public function getRequestRouter(): Router
     {
+        $this->init();
         $method = Request::instance()->getMethod();
         if (!isset($this->routers[$method])) {
-            echo 'not found http method';
+            echo 'not found http method =>' . $method;
             exit;
         }
         $uri = Request::instance()->getUri();
@@ -126,28 +140,28 @@ class RouterContainer
         $uri = trim($uri, '/');
         foreach ($this->routers[$method] as $uriRule => $router) {
             $uriRule = trim($uriRule, '/');
-            preg_match('/{([^\{]+)}/', $uriRule, $matches);
-            var_dump($uriRule);
-            exit;
+            preg_match_all('/{([^\{]+)}/', $uriRule, $matches);
+            $alias   = null;
+            $search  = ['/'];
+            $replace = ['\/'];
             //如果有动态字段
             if (isset($matches[1][0])) {
-                $search  = ['/'];
-                $replace = ['\/'];
-                $alias   = $matches[1];
-                foreach ($matches[1] as $tmp) {
-                    $search[] = '{' . $tmp . '}';
-                    //默认
-                    $replace[] = '([^\/]+)';
-                }
-                $uriRulePattern = '/^' . str_replace($search, $replace, $uriRule) . '$/';
-
-                echo $uriRulePattern . PHP_EOL;
-                if (preg_match($uriRulePattern, $uri, $matches)) {
-                    array_shift($matches);
-                    $router->setUriParams(array_combine($alias, $matches));
-                    return $router;
+                $alias = (array)$matches[1];
+                foreach ($alias as $tmp) {
+                    $search[]  = '{' . $tmp . '}';
+                    $replace[] = $router->getColumnPregFilter($tmp);
                 }
             }
+            $uriRulePattern = '/^' . str_replace($search, $replace, $uriRule) . '$/';
+
+            if (preg_match($uriRulePattern, $uri, $matches)) {
+                array_shift($matches);
+                if ($alias) {
+                    $router->setUriParams(array_combine($alias, $matches));
+                }
+                return $router;
+            }
+
         }
         echo 'not found http request method => ' . $uri;
         exit;

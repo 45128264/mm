@@ -4,10 +4,8 @@ namespace Qyk\Mm;
 
 use Qyk\Mm\Facade\Cache;
 use Qyk\Mm\Facade\Config;
-use Qyk\Mm\Facade\Log;
 use Qyk\Mm\Facade\Request;
 use Qyk\Mm\Facade\Response;
-use Qyk\Mm\Facade\Router;
 use Qyk\Mm\Facade\Session;
 use Qyk\Mm\Facade\User;
 use Qyk\Mm\Provider\CacheRedisProvider;
@@ -15,7 +13,6 @@ use Qyk\Mm\Provider\ConfigProvide;
 use Qyk\Mm\Provider\LogProvider;
 use Qyk\Mm\Provider\RequestProvider;
 use Qyk\Mm\Provider\ResponseProvider;
-use Qyk\Mm\Provider\RouterProvider;
 use Qyk\Mm\Provider\SessionProvider;
 use Qyk\Mm\Provider\UserRedisProvider;
 
@@ -29,7 +26,6 @@ use Qyk\Mm\Provider\UserRedisProvider;
  * @property Session  $session
  * @property Request  $request
  * @property Response $response
- * @property Router   $router
  * @property Config   $config
  */
 class Application
@@ -72,7 +68,6 @@ class Application
             'session'  => SessionProvider::class,
             'request'  => RequestProvider::class,
             'response' => ResponseProvider::class,
-            'router'   => RouterProvider::class,
             'config'   => ConfigProvide::class,
             'log'      => LogProvider::class,
         ];

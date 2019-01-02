@@ -5,89 +5,42 @@ namespace Qyk\Mm\Provider;
 use Qyk\Mm\Facade\Response;
 
 /**
- * 输出
+ * html输出
  * Class Cache
  * @package Qyk\Mm\Provider
  */
 class ResponseProvider extends Response
 {
-    private $rt;
-
-    /**
-     * 设置运行脚本结果
-     * @param array $rt
-     * @return mixed
-     */
-    function setControllerRt(array $rt = [])
-    {
-        $this->rt = $rt;
-    }
-
     /**
      * 获取当前服务对应名称，方便识别当前服务的类型
      * @return string
      */
     public function getName(): string
     {
-        return 'response';
+        return 'httpResponse';
     }
 
     /**
-     * 渲染结果
-     * @return mixed
+     * 渲染html内容
      */
-    public function render()
+    protected function renderHtmlContent()
     {
-        if ($this->throwable) {
-            var_dump($this->throwable);
-            return $this->renderThrowable();
-        }
-        return $this->renderNormal();
-    }
-
-    /**
-     * 普通渲染
-     */
-    protected function renderNormal()
-    {
-        ob_start();
-        ob_clean();
-        if ($this->isJson) {
-            header('Content-Type:application/json; charset=utf-8');
-            echo json_encode($this->rt, JSON_UNESCAPED_UNICODE);
+        $params  = $this->getContent();
+        $viewTpl = $this->getTpl();
+        if (!file_exists($viewTpl)) {
+            echo 'missing view tpl=>' . $viewTpl;
         } else {
-            if ($this->rt) {
-                extract($this->rt);
-            }
-            //如果没有指定模板
-            if (!isset($viewTpl)) {
-                $viewTpl = $this->app->router->currentController . DIRECTORY_SEPARATOR . $this->app->router->currentMethod;
-            }
-            $viewTpl = APP_PATH . 'view' . DIRECTORY_SEPARATOR . $viewTpl . '.php';
-            if (!file_exists($viewTpl)) {
-                echo 'missing view tpl=>' . $viewTpl;
-            } else {
-                include($viewTpl);
-            }
+            extract($params);
+            include($viewTpl);
         }
-        echo ob_get_clean();
-        exit;
     }
 
     /**
-     * 异常输出
+     * 渲染json内容
      */
-    protected function renderThrowable()
+    protected function renderJsonContent()
     {
-        //todo exception
-        echo 'exp,todo';
-    }
-
-    /**
-     * 获取模板路径
-     */
-    private function getViewTpl()
-    {
-
+        header('Content-Type:application/json; charset=utf-8');
+        echo json_encode($this->getContent(), JSON_UNESCAPED_UNICODE);
     }
 }

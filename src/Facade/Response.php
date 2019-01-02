@@ -2,7 +2,8 @@
 
 namespace Qyk\Mm\Facade;
 
-use Throwable;
+use Qyk\Mm\Route\Router;
+use Qyk\Mm\Route\RouterContainer;
 
 /**
  * response接口
@@ -11,8 +12,10 @@ use Throwable;
  */
 abstract class Response extends Facade
 {
-    public    $isJson = false;
-    protected $throwable; //异常
+    /**
+     * @var Router
+     */
+    private $router;
 
     /**
      * 获取当前Facade对应别名
@@ -27,25 +30,54 @@ abstract class Response extends Facade
      * 渲染结果
      * @return mixed
      */
-    abstract public function render();
+    public function render()
+    {
+        $router     = RouterContainer::instance()->getRequestRouter();
+        $controller = 'render' . $router->getResponseType() . 'Content';
+        if (!method_exists($this, $controller)) {
+            echo 'fuck';
+            exit;
+        }
+        $this->router = $router;
+        $this->$controller();
+        $router->terminate();
+    }
 
     /**
-     * 设置运行脚本结果
-     * @param array $rt
+     * 获取内容
+     */
+    protected function getContent(): array
+    {
+        return $this->router->invokeController();
+    }
+
+    protected function getCrsfToken()
+    {
+        return 'crsfToken';
+    }
+
+    /**
+     * 获取默认html模板
+     * @return string
+     */
+    protected function getTpl(): string
+    {
+        return $this->router->getTplPath();
+    }
+
+    /**
+     * 渲染html内容
+     * @param array $content
      * @return mixed
      */
-    abstract public function setControllerRt(array $rt = []);
+    abstract protected function renderHtmlContent();
 
     /**
-     * 获取crsfToken
+     * 渲染json内容
+     * @param array $content
+     * @return mixed
      */
-    public function getCrsfToken(): string
-    {
-        return '';
-    }
+    abstract protected function renderJsonContent();
 
-    public function setExp(Throwable $e)
-    {
-        $this->throwable = $e;
-    }
+
 }
