@@ -1,13 +1,13 @@
 <?php
 
-namespace Qyk\Mm;
+namespace Qyk\Mm\Route;
 
 use Closure;
 
 /**
  * 路由注册
  * Class RouterFactory
- * @package Qyk\Mm
+ * @package Qyk\Mm\Route
  *
  * @method static Router post(string $uri, string | array $action = null)
  * @method static Router get(string $uri, string | array $action = null)
@@ -59,7 +59,7 @@ class RouterRegister
      */
     protected static function popGroupStack()
     {
-
+        array_pop(self::$groupStack);
     }
 
     /**
@@ -140,6 +140,7 @@ class RouterRegister
         if (!empty(self::$groupStack)) {
             $router->bindParameters(end(self::$groupStack));
         }
+
         $container = RouterContainer::instance();
         $container->add($router);
         $router->setContainer($container);

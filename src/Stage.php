@@ -30,14 +30,19 @@ class Stage
     }
 
     /**
-     * @param string $appName
-     * @param string $appDirPath
+     * @param string $appName 项目名称
+     * @param string $appDirPath 项目路径
+     * @param string $appNameSpace 顶层命名空间
+     * @return Stage
      */
-    protected function define(string $appName, string $appDirPath)
+    public function define(string $appName, string $appDirPath, string $appNameSpace)
     {
         defined('APP_NAME') || define('APP_NAME', $appName);
         defined('APP_PATH') || define('APP_PATH', $appDirPath);
+        defined('APP_CONF_PATH') || define('APP_CONF_PATH', $appDirPath . '/conf');
         defined('DS') || define('DS', DIRECTORY_SEPARATOR);
+        defined('APP_NAME_SPACE') || define('APP_NAME_SPACE', $appNameSpace);
+        return $this;
     }
 
     /**
@@ -59,14 +64,12 @@ class Stage
     }
 
     /**
-     * app实例化
+     * 执行
      * @param Application $application
-     * @return Facade\Response
      */
-    public function make(Application $application, $appName, $appPath)
+    public function run(Application $application)
     {
         $this->addErrorListener();
-        $this->define($appName, $appPath);
         //region initApp
         $initApp = function () {
             $this->init();
@@ -74,17 +77,9 @@ class Stage
         $initApp->call($application);
         //endregion
         $this->app = $application;
-        $this->app->router->execute();
-        return $this->app->response;
+        $this->app->response->render();
     }
 
-    /**
-     * 执行
-     */
-    public function run()
-    {
-
-    }
 
     /**
      *  异常监控
