@@ -72,8 +72,8 @@
           <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Test/index.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="296">
-                  <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
+                <state relative-caret-position="323">
+                  <caret line="17" column="3" lean-forward="true" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
                   <folding>
                     <element signature="e#24#51#0#PHP" expanded="true" />
                   </folding>
@@ -84,7 +84,7 @@
           <file leaf-file-name="standard_1.php" pinned="false" current-in-tab="false">
             <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_1.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="160">
+                <state relative-caret-position="14554">
                   <caret line="766" column="29" selection-start-line="766" selection-start-column="22" selection-end-line="766" selection-end-column="29" />
                 </state>
               </provider>
@@ -102,7 +102,7 @@
           <file leaf-file-name="RouterRegister.php" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/RouterRegister.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="156">
+                <state relative-caret-position="3021">
                   <caret line="159" column="23" selection-start-line="159" selection-start-column="23" selection-end-line="159" selection-end-column="23" />
                 </state>
               </provider>
@@ -111,7 +111,7 @@
           <file leaf-file-name="Request.php" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Request.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="240">
+                <state relative-caret-position="665">
                   <caret line="35" column="56" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="56" />
                 </state>
               </provider>
@@ -120,12 +120,12 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
           <file leaf-file-name="Router.php" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Router.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="304">
-                  <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+                <state relative-caret-position="380">
+                  <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
                 </state>
               </provider>
             </entry>
@@ -133,7 +133,7 @@
           <file leaf-file-name="RouterContainer.php" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/RouterContainer.php">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="133">
+                <state relative-caret-position="570">
                   <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
                   <folding>
                     <element signature="e#133#216#0#PHP" />
@@ -143,11 +143,6 @@
                     <element signature="e#602#685#0#PHP" />
                     <element signature="e#913#974#0#PHP" />
                     <element signature="e#1370#1447#0#PHP" />
-                    <element signature="e#1405#1460#0#PHP" />
-                    <element signature="e#1405#1423#0#PHP" />
-                    <element signature="e#1489#1566#0#PHP" />
-                    <element signature="e#1511#1529#0#PHP" />
-                    <element signature="e#1595#1670#0#PHP" />
                   </folding>
                 </state>
               </provider>
@@ -245,10 +240,10 @@
     </include_path>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="44" />
+    <option name="x" value="-11" />
+    <option name="y" value="40" />
     <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="height" value="1019" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -278,7 +273,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -300,6 +294,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -362,11 +357,12 @@
       <workItem from="1546045738258" duration="16817000" />
       <workItem from="1546324452480" duration="160000" />
       <workItem from="1546324676275" duration="9900000" />
+      <workItem from="1546440464985" duration="267000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48388000" />
+    <option name="totallyTimeSpent" value="48655000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -378,20 +374,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="44" width="1936" height="1056" extended-state="0" />
+    <frame x="-11" y="40" width="1936" height="1019" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32951945" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.45080093" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.45080093" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info anchor="right" id="Mongo Explorer" order="4" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32837528" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.34228972" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49862638" visible="true" weight="0.09207709" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="bottom" id="Find" order="1" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="2" sideWeight="0.50137365" side_tool="true" weight="0.21573876" />
@@ -402,29 +397,30 @@
       <window_info anchor="right" id="PlantUML" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.33445567" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21573876" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" id="Database" order="5" />
       <window_info anchor="right" id="Mongo Explorer" order="4" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="right" id="PlantUML" order="3" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.32884398" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="PlantUML" order="3" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -458,11 +454,6 @@
             <element signature="e#602#685#0#PHP" />
             <element signature="e#913#974#0#PHP" />
             <element signature="e#1370#1447#0#PHP" />
-            <element signature="e#1405#1460#0#PHP" />
-            <element signature="e#1405#1423#0#PHP" />
-            <element signature="e#1489#1566#0#PHP" />
-            <element signature="e#1511#1529#0#PHP" />
-            <element signature="e#1595#1670#0#PHP" />
           </folding>
         </state>
       </provider>
@@ -724,16 +715,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/RouterParser.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="5" lean-forward="true" selection-start-line="11" selection-start-column="3" selection-end-line="19" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RouterParser.php" />
     <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_1.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
+        <state relative-caret-position="14554">
           <caret line="766" column="29" selection-start-line="766" selection-start-column="22" selection-end-line="766" selection-end-column="29" />
         </state>
       </provider>
@@ -747,31 +732,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Request.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
+        <state relative-caret-position="665">
           <caret line="35" column="56" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/RouterRegister.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
+        <state relative-caret-position="3021">
           <caret line="159" column="23" selection-start-line="159" selection-start-column="23" selection-end-line="159" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="19" column="33" selection-start-line="19" selection-start-column="33" selection-end-line="19" selection-end-column="33" />
-          <folding>
-            <element signature="e#24#51#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/RouterContainer.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
+        <state relative-caret-position="570">
           <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
           <folding>
             <element signature="e#133#216#0#PHP" />
@@ -781,19 +756,24 @@
             <element signature="e#602#685#0#PHP" />
             <element signature="e#913#974#0#PHP" />
             <element signature="e#1370#1447#0#PHP" />
-            <element signature="e#1405#1460#0#PHP" />
-            <element signature="e#1405#1423#0#PHP" />
-            <element signature="e#1489#1566#0#PHP" />
-            <element signature="e#1511#1529#0#PHP" />
-            <element signature="e#1595#1670#0#PHP" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Router.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="16" column="10" lean-forward="true" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
+        <state relative-caret-position="380">
+          <caret line="20" column="7" lean-forward="true" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="17" column="3" lean-forward="true" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
+          <folding>
+            <element signature="e#24#51#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
