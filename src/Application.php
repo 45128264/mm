@@ -36,7 +36,6 @@ class Application
      */
     private $container;
 
-
     /**
      * 获取服务
      * @param $provider
@@ -71,7 +70,7 @@ class Application
             'config'   => ConfigProvide::class,
             'log'      => LogProvider::class,
         ];
-        $provider        = array_merge($defaultProvider, $this->getProvider());
+        $provider        = array_merge($defaultProvider, $this->provider());
         foreach ($provider as $abstract => $concrete) {
             $this->container->bind($abstract, $concrete);
         }
@@ -81,8 +80,10 @@ class Application
      * 自定义服务模块
      * @return array
      */
-    protected function getProvider()
+    protected function provider()
     {
         return [];
     }
+
+
 }

@@ -4,6 +4,7 @@ namespace Qyk\Mm\Facade;
 
 use Qyk\Mm\Route\Router;
 use Qyk\Mm\Route\RouterContainer;
+use Throwable;
 
 /**
  * response接口
@@ -29,6 +30,7 @@ abstract class Response extends Facade
     /**
      * 渲染结果
      * @return mixed
+     * @throws Throwable
      */
     public function render()
     {
@@ -39,17 +41,17 @@ abstract class Response extends Facade
             exit;
         }
         $this->router = $router;
-        $this->$controller();
+        try {
+            $content = $this->router->invokeController();
+            $this->$controller($content);
+        } catch (throwable $e) {
+            $controller .= 'Error';
+            $this->$controller($e);
+            throw $e;
+        }
         $router->terminate();
     }
 
-    /**
-     * 获取内容
-     */
-    protected function getContent(): array
-    {
-        return $this->router->invokeController();
-    }
 
     protected function getCrsfToken()
     {
@@ -57,7 +59,7 @@ abstract class Response extends Facade
     }
 
     /**
-     * 获取默认html模板
+     * 获取html模板别名
      * @return string
      */
     protected function getTpl(): string
@@ -66,18 +68,44 @@ abstract class Response extends Facade
     }
 
     /**
+     * 获取html模板路径
+     * @return string
+     */
+    protected function getFullTplPath(string $alias): string
+    {
+        if (!$alias) {
+            return false;
+        }
+        return APP_TEMPLE_PATH . '/' . str_replace('.', '/', $alias) . '.php';
+    }
+
+    /**
      * 渲染html内容
      * @param array $content
      * @return mixed
      */
-    abstract protected function renderHtmlContent();
+    abstract protected function renderHtmlContent(array $content);
+
+    /**
+     * 渲染html内容，失败
+     * @param Throwable $e
+     * @return mixed
+     */
+    abstract protected function renderHtmlContentError(throwable $e);
 
     /**
      * 渲染json内容
      * @param array $content
      * @return mixed
      */
-    abstract protected function renderJsonContent();
+    abstract protected function renderJsonContent(array $content);
+
+    /**
+     * 渲染json内容失败
+     * @param Throwable $e
+     * @return mixed
+     */
+    abstract protected function renderJsonContentError(throwable $e);
 
 
 }

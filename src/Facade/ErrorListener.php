@@ -7,7 +7,7 @@ namespace Qyk\Mm\Facade;
  * Class Cache
  * @package Qyk\Mm\Facade
  */
-abstract class ErrorEventListener extends Facade
+abstract class ErrorListener extends Facade
 {
     /**
      * 获取当前服务对应名称，方便识别当前服务的类型

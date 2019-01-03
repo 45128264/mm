@@ -193,6 +193,19 @@ class Router
         return $this;
     }
 
+
+    /**
+     * 返回的数据类型
+     * @param string $responseType
+     * @return Router
+     */
+    public function response(string $responseType)
+    {
+        $this->response = $responseType;
+        return $this;
+    }
+
+
     /**
      * 正则条件
      * @param string $column
@@ -275,7 +288,7 @@ class Router
      */
     public function getTplPath()
     {
-        return APP_PATH . '/temple/' . $this->tplPath . '.php';
+        return $this->tplPath;
     }
 
     /**

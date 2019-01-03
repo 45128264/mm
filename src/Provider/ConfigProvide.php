@@ -65,8 +65,8 @@ class ConfigProvide extends Config
         $key = array_shift($keys);
         if (!isset($val[$key])) {
             //todo exception
-            echo 'missing key val with key:';
-            exit;
+            trigger_error('missing key val with key:' . $key, E_NOTICE);
+            return false;
         }
         if (!empty($keys)) {
             return $this->getArrayDeepVal($val[$key], $keys);
@@ -81,10 +81,15 @@ class ConfigProvide extends Config
      */
     private function getConfigByFile($type)
     {
-        $file = APP_CONF_PATH . $type . '.' . APP_ENV . '.php';
-        if (!file_exists($file)) {
-            $file = APP_CONF_PATH . $type . '.php';
+        $appEnv = $this->getAppEnv();
+        $file   = APP_CONF_PATH . '/' . $type . '.php';
+        if ($appEnv) {
+            $file = APP_CONF_PATH . '/' . $type . '.' . $appEnv . '.php';
+            if (!file_exists($file)) {
+                $file = APP_CONF_PATH . '/' . $type . '.php';
+            }
         }
+
         if (!file_exists($file)) {
             //todo exception
             echo 'missing config file=>' . $file;
@@ -97,5 +102,14 @@ class ConfigProvide extends Config
             exit;
         }
         return $config;
+    }
+
+    /**
+     * 获取app对应的环境
+     */
+    protected function getAppEnv()
+    {
+        $env = get_cfg_var(APP_NAME);
+        return $env ? $env : 'dev';
     }
 }

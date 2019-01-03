@@ -8,6 +8,8 @@
 
 namespace Test\Controller;
 
+use http\Exception;
+
 /**
  * 用户
  * Class UsersController
