@@ -56,6 +56,7 @@ class Stage
     /**
      * 执行
      * @param Application $application
+     * @throws \Throwable
      */
     public function run(Application $application)
     {
@@ -68,6 +69,7 @@ class Stage
         //endregion
         $this->app = $application;
         $this->app->response->render();
+        $this->terminate();
     }
 
     /**
@@ -90,5 +92,15 @@ class Stage
             $this->erroEvenListener = new ErrorListenerProvide();
         }
         $this->erroEvenListener->listen();
+    }
+
+    /**
+     * 关闭操作
+     */
+    protected function terminate()
+    {
+        foreach ($this->app->terminateContainer as $callback) {
+            $callback();
+        }
     }
 }

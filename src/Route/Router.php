@@ -54,7 +54,7 @@ class Router
      * uri解析出来的参数
      * @var []
      */
-    protected $uriParams;
+    protected $uriParams = [];
     /**
      * 路由动态字段对应的正则表达式
      * @var []

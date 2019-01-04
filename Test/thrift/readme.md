@@ -1,0 +1,3 @@
+1、 thrift -r -gen php:psr4 xx.thrift
+
+2、 mv ...

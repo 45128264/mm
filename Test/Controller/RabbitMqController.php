@@ -9,6 +9,8 @@
 namespace Test\Controller;
 
 
+use Test\Api\RabbitMq;
+
 /**
  * 消息队列
  * Class RabbitMqController
@@ -21,7 +23,11 @@ class RabbitMqController
      */
     public function sender()
     {
-
+        RabbitMq::instance()->pushStr('hello', 'queue_hello', 'routingKey_hello');
+        return [
+            'rt'  => true,
+            'msg' => 'sender'
+        ];
     }
 
     /**
@@ -29,6 +35,10 @@ class RabbitMqController
      */
     public function receiver()
     {
-
+        RabbitMq::instance()->receiver('hello', function ($msg) {
+            echo $msg;
+            echo PHP_EOL;
+        });
+        return ['rt' => true, 'msg' => 'receiver'];
     }
 }

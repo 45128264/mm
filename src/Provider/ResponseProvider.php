@@ -86,10 +86,9 @@ class ResponseProvider extends Response
             $contents = ['result' => false, 'msg' => 'exp', 'data' => [
                 'file'  => $e->getFile(),
                 'line'  => $e->getLine(),
-                'msg'   => $e->getMessage(),
+                //                'msg'   => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'code'  => $e->getCode(),
-                'view'  => Stage::app()->config->get('app.debug.exp_view_tpl')
             ]];
         } else {
             $contents = ['result' => false, 'msg' => '系统繁忙，稍后再试'];

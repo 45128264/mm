@@ -29,3 +29,14 @@ RouterRegister::group(['prefix' => 'users'], function () {
     });
 
 });
+
+//消息队列
+RouterRegister::group(['prefix' => 'mq', 'response' => 'json'], function () {
+    RouterRegister::get('sender', 'RabbitMqController@sender');
+    RouterRegister::get('receiver', 'RabbitMqController@receiver');
+});
+
+//rpc
+RouterRegister::group(['prefix' => 'thrift', 'response' => 'json'], function () {
+    RouterRegister::get('hello', 'ThriftController@index');
+});

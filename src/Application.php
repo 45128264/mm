@@ -2,6 +2,7 @@
 
 namespace Qyk\Mm;
 
+use Closure;
 use Qyk\Mm\Facade\Cache;
 use Qyk\Mm\Facade\Config;
 use Qyk\Mm\Facade\Request;
@@ -35,6 +36,11 @@ class Application
      * @var Container
      */
     private $container;
+    /**
+     * 脚本结束后的，后续操作，比如释放连接
+     * @var []
+     */
+    public $terminateContainer = [];
 
     /**
      * 获取服务
@@ -83,6 +89,28 @@ class Application
     protected function provider()
     {
         return [];
+    }
+
+
+    /**
+     * 注册，脚本结束的关闭任务
+     * @param string  $abstract
+     * @param Closure $callback
+     */
+    public function bindTerminate(string $abstract, Closure $callback)
+    {
+        $this->terminateContainer[$abstract] = $callback;
+    }
+
+    /**
+     * 清除任务
+     * @param string $abstract
+     */
+    public function unsetTerminate(string $abstract)
+    {
+        if (isset($this->terminateContainer[$abstract])) {
+            unset($this->terminateContainer[$abstract]);
+        }
     }
 
 

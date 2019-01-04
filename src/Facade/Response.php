@@ -4,6 +4,7 @@ namespace Qyk\Mm\Facade;
 
 use Qyk\Mm\Route\Router;
 use Qyk\Mm\Route\RouterContainer;
+use Qyk\Mm\Stage;
 use Throwable;
 
 /**
@@ -34,22 +35,23 @@ abstract class Response extends Facade
      */
     public function render()
     {
-        $router     = RouterContainer::instance()->getRequestRouter();
-        $controller = 'render' . $router->getResponseType() . 'Content';
-        if (!method_exists($this, $controller)) {
-            echo 'fuck';
-            exit;
-        }
-        $this->router = $router;
         try {
+            $router     = RouterContainer::instance()->getRequestRouter();
+            $controller = 'render' . $router->getResponseType() . 'Content';
+            if (!method_exists($this, $controller)) {
+                echo 'fuck';
+                exit;
+            }
+            $this->router = $router;
+
             $content = $this->router->invokeController();
             $this->$controller($content);
+            $router->terminate();
         } catch (throwable $e) {
             $controller .= 'Error';
             $this->$controller($e);
             throw $e;
         }
-        $router->terminate();
     }
 
 
