@@ -17,4 +17,17 @@ abstract class Session extends Facade
     {
         return 'session';
     }
+
+    /**
+     * 设置cookie
+     * @param $key
+     * @param $value
+     * @param int $expire
+     * @param string $path
+     * @param null $domain
+     */
+    public function setCookie($key, $value, $expire=86400, $path='/', $domain=null)
+    {
+        setcookie($key, $value, time()+$expire, $path, $domain);
+    }
 }

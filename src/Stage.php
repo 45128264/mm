@@ -69,7 +69,6 @@ class Stage
         //endregion
         $this->app = $application;
         $this->app->response->render();
-        $this->terminate();
     }
 
     /**
@@ -92,15 +91,5 @@ class Stage
             $this->erroEvenListener = new ErrorListenerProvide();
         }
         $this->erroEvenListener->listen();
-    }
-
-    /**
-     * 关闭操作
-     */
-    protected function terminate()
-    {
-        foreach ($this->app->terminateContainer as $callback) {
-            $callback();
-        }
     }
 }

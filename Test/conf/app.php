@@ -11,4 +11,7 @@ return [
         'exp_view_tpl' => 'exp.expDebugReport',
     ],
     'exp_view_tpl' => 'exp.errorReport',
+    'token'        => [
+        'crsf' => 'csrf-token',
+    ]
 ];

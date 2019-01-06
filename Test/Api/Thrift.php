@@ -2,13 +2,14 @@
 
 namespace Test\Api;
 
+use Qyk\Mm\Facade\AbstractConnectService;
 use Qyk\Mm\Singleton;
 use Qyk\Mm\Stage;
 use Thrift\Protocol\TBinaryProtocol;
 use Thrift\Transport\TBufferedTransport;
 use Thrift\Transport\TSocket;
 
-class Thrift
+class Thrift extends AbstractConnectService
 {
     use Singleton;
 
@@ -30,40 +31,34 @@ class Thrift
     public function getProtocol()
     {
         if (!$this->protocol) {
-            $this->openTransport();
+            $this->connect();
             $this->protocol = new TBinaryProtocol($this->transport);
         }
         return $this->protocol;
     }
 
     /**
-     * 开启连接
+     * 建立连接
+     * @return mixed
      * @throws \Thrift\Exception\TTransportException
      */
-    protected function openTransport()
+    protected function buildConnect()
     {
-        if ($this->protocol) {
-            return;
-        }
         $conf            = Stage::app()->config->get('thrift');
         $socket          = new TSocket($conf['host'], $conf['port']);
         $this->transport = new TBufferedTransport($socket, $conf['rBufSize'], $conf['wBufSize']);
         $this->transport->open();
-        Stage::app()->bindTerminate('thrift', function () {
-            $this->closeTransport();
-        });
     }
 
     /**
-     * 关闭连接
+     * 关闭操作
      */
-    public function closeTransport()
+    protected function distConnect()
     {
         if (!$this->transport) {
             return;
         }
         $this->transport->close();
         $this->transport = null;
-        Stage::app()->unsetTerminate('thrift');
     }
 }

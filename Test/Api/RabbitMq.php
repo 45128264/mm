@@ -6,10 +6,11 @@ use Closure;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use Qyk\Mm\Facade\AbstractConnectService;
 use Qyk\Mm\Singleton;
 use Qyk\Mm\Stage;
 
-class RabbitMq
+class RabbitMq extends AbstractConnectService
 {
     use Singleton;
 
@@ -52,6 +53,36 @@ class RabbitMq
 
 
     /**
+     * 获取队列内容但不闭连接，减少其他操作需要重新连接
+     * @param         $queueKey
+     * @param Closure $callback 获取队列内容后的执行回调
+     * @return RabbitMq
+     * @throws \ErrorException
+     */
+    public function receiver($queueKey, Closure $callback)
+    {
+        $this->openChanel();
+        array_unshift($this->queueDeclareParams, $queueKey);
+        $this->refreshBasicConsumeParams();
+        $this->channel->queue_declare(...$this->queueDeclareParams);
+        $this->queueDeclareParams = []; //清除队列,自定义的参数
+
+        $this->refreshBasicConsumeParams();
+        array_unshift($this->basicConsumeParams, $queueKey);
+        array_push($this->basicConsumeParams, $callback);
+        $this->channel->basic_consume(...$this->basicConsumeParams);
+        $this->basicConsumeParams = [];
+
+        while (count($this->channel->callbacks)) {
+            sleep(1);
+            return $this;
+            $this->channel->wait();
+        }
+
+        return $this;
+    }
+
+    /**
      * 定义，消费者队列的参数
      * @param bool $consumerTag
      * @param bool $noLocal
@@ -89,7 +120,6 @@ class RabbitMq
     public function pushStr(string $push, $queueKey, $routingKey, $exchange = '')
     {
         $this->openChanel();
-
         $this->refreshBasicConsumeParams();
         array_unshift($this->queueDeclareParams, $queueKey);
         $this->channel->queue_declare(...$this->queueDeclareParams);
@@ -100,9 +130,10 @@ class RabbitMq
         return $this;
     }
 
+
     /**
      * array注入，但不会自动关闭连接
-     * @param array  $push
+     * @param array $push
      * @param        $queueKey
      * @param        $routingKey
      * @param string $exchange
@@ -111,37 +142,6 @@ class RabbitMq
     public function pushArray(array $push, $queueKey, $routingKey, $exchange = '')
     {
         return $this->pushStr(json_encode($push, JSON_UNESCAPED_UNICODE), $queueKey, $routingKey, $exchange);
-    }
-
-
-    /**
-     * 获取队列内容但不闭连接，减少其他操作需要重新连接
-     * @param         $queueKey
-     * @param Closure $callback 获取队列内容后的执行回调
-     * @return RabbitMq
-     * @throws \ErrorException
-     */
-    public function receiver($queueKey, Closure $callback)
-    {
-        $this->openChanel();
-        $this->refreshBasicConsumeParams();
-        array_unshift($this->queueDeclareParams, $queueKey);
-        $this->channel->queue_declare(...$this->queueDeclareParams);
-        $this->queueDeclareParams = []; //清除队列,自定义的参数
-
-        $this->refreshBasicConsumeParams();
-        array_unshift($this->basicConsumeParams, $queueKey);
-        array_push($this->basicConsumeParams, $callback);
-        $this->channel->basic_consume(...$this->basicConsumeParams);
-        $this->basicConsumeParams = [];
-
-        while (count($this->channel->callbacks)) {
-            sleep(1);
-            return $this;
-            $this->channel->wait();
-        }
-
-        return $this;
     }
 
     /**
@@ -172,18 +172,24 @@ class RabbitMq
         if ($this->connection) {
             return;
         }
-        $conf             = Stage::app()->config->get('rabbitMq');
-        $this->connection = new AMQPStreamConnection($conf['host'], $conf['port'], $conf['user'], $conf['password']);
-        $this->channel    = $this->connection->channel();
-        Stage::app()->bindTerminate('rabbitMq', function () {
-            $this->closeChanel();
-        });
+        $this->connect();
     }
 
     /**
-     * 关闭管道
+     * 建立连接
+     * @return mixed
      */
-    public function closeChanel()
+    protected function buildConnect()
+    {
+        $conf             = Stage::app()->config->get('rabbitMq');
+        $this->connection = new AMQPStreamConnection($conf['host'], $conf['port'], $conf['user'], $conf['password']);
+        $this->channel    = $this->connection->channel();
+    }
+
+    /**
+     * 关闭操作
+     */
+    protected function distConnect()
     {
         if (!$this->connection) {
             return;
@@ -192,6 +198,5 @@ class RabbitMq
         $this->channel->close();
         $this->connection = null;
         $this->channel    = null;
-        Stage::app()->unsetTerminate('rabbitMq');
     }
 }
