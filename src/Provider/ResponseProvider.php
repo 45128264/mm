@@ -14,15 +14,6 @@ use Throwable;
 class ResponseProvider extends Response
 {
     /**
-     * 获取当前服务对应名称，方便识别当前服务的类型
-     * @return string
-     */
-    public function getName(): string
-    {
-        return 'httpResponse';
-    }
-
-    /**
      * 渲染html内容
      * @param array $params
      */
@@ -57,7 +48,7 @@ class ResponseProvider extends Response
      */
     protected function renderHtmlContentError(throwable $e)
     {
-        $isShowExp = Stage::app()->config->get('app.debug.show_exp');
+        $isShowExp = Stage::app()->config->get('app.runtime.debug.show_exp');
         if ($isShowExp) {
             $this->renderHtmlContent([
                 'file'    => $e->getFile(),
@@ -65,11 +56,11 @@ class ResponseProvider extends Response
                 'msg'     => $e->getMessage(),
                 'trace'   => $e->getTraceAsString(),
                 'code'    => $e->getCode(),
-                'viewTpl' => Stage::app()->config->get('app.debug.exp_view_tpl')
+                'viewTpl' => Stage::app()->config->get('app.runtime.debug.exp_view_tpl')
             ]);
         } else {
             $this->renderHtmlContent([
-                'viewTpl' => Stage::app()->config->get('app.exp_view_tpl')
+                'viewTpl' => Stage::app()->config->get('app.runtime.exp_view_tpl')
             ]);
         }
     }

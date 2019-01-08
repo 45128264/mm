@@ -5,6 +5,7 @@ namespace Qyk\Mm\Facade;
 use Qyk\Mm\Route\Router;
 use Qyk\Mm\Route\RouterContainer;
 use Qyk\Mm\Stage;
+use Qyk\Mm\Traits\TimeOutLogTrait;
 use Throwable;
 
 /**
@@ -14,6 +15,8 @@ use Throwable;
  */
 abstract class Response extends Facade
 {
+    use TimeOutLogTrait;
+
     /**
      * @var Router
      */
@@ -36,6 +39,7 @@ abstract class Response extends Facade
     public function render()
     {
         $controller = '';
+        $this->tickStart();
         try {
             $router     = RouterContainer::instance()->getRequestRouter();
             $controller = 'render' . $router->getResponseType() . 'Content';
@@ -44,11 +48,13 @@ abstract class Response extends Facade
                 exit;
             }
             $this->router = $router;
-
+            $this->router->invokeBeforeMiddleware();
             $content = $this->router->invokeController();
             $this->$controller($content);
-            $router->terminate();
+            $router->invokeAfterMiddleware();
             $this->terminate();
+            $this->tickEnd(60);
+
         } catch (throwable $e) {
             if ($controller) {
                 $controller .= 'Error';
@@ -69,13 +75,27 @@ abstract class Response extends Facade
      * 字符串运算时 利用字符的ascii码转换为2进制来运算
      * @return mixed
      */
-    protected function getCsrfToken()
+    protected function createCsrfToken()
+    {
+        $trueToken = $this->generateCsrf();
+        $csrfToken = $this->createCsrfCookie($trueToken);
+        $app       = Stage::app();
+        $conf      = $app->config->get('app.request.csrf');
+        $trueKey   = $conf['trueTokenKey'];
+        $app->session->setCookie($trueKey, $this->hashData(serialize([$trueKey, $trueToken]), 'platformtest'));
+        $app->session->setCookie($conf['tokenKey'], $csrfToken);
+
+        return $csrfToken;
+    }
+
+    /**
+     * @param $token
+     * @return string
+     */
+    public function createCsrfCookie($token)
     {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-.';
         $mask  = substr(str_shuffle(str_repeat($chars, 5)), 0, 8);
-        $token = $this->generateCsrf();
-        $app   = Stage::app();
-        $app->session->setCookie($app->config->get('app.token.csrf'), $token);
         return str_replace('+', '.', base64_encode($mask . $this->xorTokens($token, $mask)));
     }
 
@@ -177,5 +197,17 @@ abstract class Response extends Facade
         }
     }
 
+    /**
+     * 获取csrf对应的form变量名称
+     */
+    protected function getCsrfPostKey()
+    {
+        return Stage::app()->config->get('app.request.csrf.postKey');
+    }
 
+    private function hashData($data, $key)
+    {
+        $hash = hash_hmac('sha256', $data, $key);
+        return $hash . $data;
+    }
 }

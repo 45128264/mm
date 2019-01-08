@@ -21,14 +21,6 @@ abstract class Controller extends Facade
         return 'controller';
     }
 
-    /**
-     * 获取类名
-     * @return string
-     */
-    public function getName(): string
-    {
-        return get_called_class();
-    }
 
     /**
      * 执行功能

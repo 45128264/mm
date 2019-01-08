@@ -6,17 +6,15 @@
  * Time: 16:49
  */
 
-namespace Qyk\Mm;
+namespace Qyk\Mm\Traits;
 
 /**
  * 单态模式
- * Class Singleton
- * @package Qyk\Mm
  */
-trait Singleton
+trait SingletonTrait
 {
     /**
-     * @var Singleton
+     * @var SingletonTrait
      */
     private static $instance;
 

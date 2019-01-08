@@ -4,6 +4,7 @@ namespace Qyk\Mm;
 
 use Qyk\Mm\Facade\ErrorListener;
 use Qyk\Mm\Provider\ErrorListenerProvide;
+use Qyk\Mm\Traits\SingletonTrait;
 
 /**
  * 舞台
@@ -12,7 +13,7 @@ use Qyk\Mm\Provider\ErrorListenerProvide;
  */
 class Stage
 {
-    use Singleton;
+    use SingletonTrait;
 
     /**
      * 异常监控
@@ -91,5 +92,22 @@ class Stage
             $this->erroEvenListener = new ErrorListenerProvide();
         }
         $this->erroEvenListener->listen();
+    }
+
+    /**
+     * 记录日志
+     * @param string $type
+     * @param string $content
+     */
+    public static function log(string $type, string $content)
+    {
+        if (!is_dir(RUNTIME_LOG_PATH)) {
+            mkdir(RUNTIME_LOG_PATH, 0777, true);
+        }
+        $file = RUNTIME_LOG_PATH . '/' . $type . '_' . date('ymd');
+        file_put_contents($file . '.log', $content, FILE_APPEND);
+        if (filesize($file . '.log') > 1000000000) {
+            rename($file . 'log', $file . '.' . date('His') . '.log');
+        }
     }
 }

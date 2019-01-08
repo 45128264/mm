@@ -7,12 +7,12 @@ use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Qyk\Mm\Facade\AbstractConnectService;
-use Qyk\Mm\Singleton;
+use Qyk\Mm\Traits\SingletonTrait;
 use Qyk\Mm\Stage;
 
 class RabbitMq extends AbstractConnectService
 {
-    use Singleton;
+    use SingletonTrait;
 
     /**
      * 队列的参数

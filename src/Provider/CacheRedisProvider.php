@@ -11,14 +11,6 @@ use Qyk\Mm\Facade\Cache;
  */
 class CacheRedisProvider extends Cache
 {
-    /**
-     * 获取当前服务对应名称，方便识别当前服务的类型
-     * @return string
-     */
-    public function getName(): string
-    {
-        return 'cache_redis';
-    }
 
     public function hExists($key, $field): bool
     {

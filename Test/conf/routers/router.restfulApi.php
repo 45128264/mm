@@ -19,10 +19,10 @@ RouterRegister::group(['prefix' => 'users'], function () {
         RouterRegister::post('register', 'UsersController@register');
     });
     //已登陆
-    RouterRegister::group(['middleware' => 'logined'], function () {
+    RouterRegister::group(['middleware' => ['logined', 'checkRolePermission']], function () {
         //        RouterRegister::get('logout', 'UsersController@logout');
         //        RouterRegister::get('{user_id}/card', 'UsersController@cardList');
-        RouterRegister::get('{user_id}/{card_id}/card', 'UsersController@cardDetail');
+        RouterRegister::any('{user_id}/{card_id}/card', 'UsersController@cardDetail')->response('json');
         //        RouterRegister::post('card', 'UsersController@addCard');
         //        RouterRegister::put('card', 'UsersController@editCard');
         //        RouterRegister::patch('avatar', 'UsersController@avatar');

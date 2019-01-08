@@ -2,8 +2,8 @@
 
 namespace Qyk\Mm\Route;
 
-use Qyk\Mm\Request;
-use Qyk\Mm\Singleton;
+use Qyk\Mm\Traits\SingletonTrait;
+use Qyk\Mm\Stage;
 
 /**
  * 路由容器
@@ -12,7 +12,7 @@ use Qyk\Mm\Singleton;
  */
 class RouterContainer
 {
-    use Singleton;
+    use SingletonTrait;
     /**
      * An array of the routes keyed by method.
      *
@@ -113,12 +113,12 @@ class RouterContainer
     public function getRequestRouter(): Router
     {
         $this->init();
-        $method = Request::instance()->getMethod();
+        $method = Stage::app()->request->getMethod();
         if (!isset($this->routers[$method])) {
             echo 'not found http method =>' . $method;
             exit;
         }
-        $uri = Request::instance()->getUri();
+        $uri = Stage::app()->request->getUri();
         if (!$uri) {
             echo 'not found http uri';
             exit;

@@ -17,14 +17,6 @@ class ConfigProvide extends Config
      */
     private $config;
 
-    /**
-     * 获取当前服务对应名称，方便识别当前服务的类型
-     * @return string
-     */
-    public function getName(): string
-    {
-        return 'config';
-    }
 
     /**
      * 获取指定config文件类型下的key数据

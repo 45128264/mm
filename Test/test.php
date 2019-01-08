@@ -36,3 +36,6 @@ if (($tt = 1) && $tt) {
 }
 echo 'xxxs';
 var_dump($tt);
+
+echo PHP_EOL;
+echo '1abc' == 1 ? 'true' : 'false';

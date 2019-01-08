@@ -3,6 +3,10 @@
 namespace Qyk\Mm\Route;
 
 use Closure;
+use Exception;
+use Qyk\Mm\Facade\Middleware;
+use Qyk\Mm\Stage;
+use ReflectionClass;
 
 /**
  * 路由实体
@@ -100,7 +104,13 @@ class Router
             $this->namespace = $attribute['namespace'];
         }
         if (isset($attribute['middleware'])) {
-            $this->middleware = $attribute['middleware'];
+            $this->middleware['before'] = (array)$attribute['middleware'];
+        }
+        if (isset($attribute['before'])) {
+            $this->middleware['before'] = (array)$attribute['before'];
+        }
+        if (isset($attribute['after'])) {
+            $this->middleware['after'] = (array)$attribute['after'];
         }
         if (isset($attribute['response'])) {
             $this->response = $attribute['response'];
@@ -266,7 +276,7 @@ class Router
         $controller      = explode('@', $this->action['controller']);
         $controllerClass = $controller[0];
         $concrete        = APP_NAME_SPACE . '\\Controller\\' . $controllerClass;
-        $reflector       = new \ReflectionClass($concrete);
+        $reflector       = new ReflectionClass($concrete);
         if (!$reflector->isInstantiable()) {
             echo 'cant install controller=>' . $concrete;
             exit;
@@ -300,10 +310,52 @@ class Router
     }
 
     /**
-     * 路由终止，执行终止计划
+     * 执行controller开始时触发的中间件
      */
-    public function terminate()
+    public function invokeBeforeMiddleware()
     {
+        $this->invokeMiddleware($this->middleware, 'before');
+    }
 
+    /**
+     * 输出结束时触发的中间件
+     */
+    public function invokeAfterMiddleware()
+    {
+        $this->invokeMiddleware($this->middleware, 'after');
+    }
+
+    /**
+     * 触发中间件
+     * @param array  $middlewares
+     * @param string $key
+     * @throws \Qyk\Mm\Exception\MiddlewareExp
+     * @throws \ReflectionException
+     */
+    protected function invokeMiddleware(array &$middlewares, string $key)
+    {
+        if (!isset($middlewares[$key])) {
+            return;
+        }
+
+        foreach ($middlewares[$key] as $middleware) {
+            if (!$middleware) {
+                continue;
+            }
+            $middleware = Stage::app()->config->get('middleware', $middleware);
+            if (!$middleware) {
+                throw new Exception('missing middleware conf');
+            }
+            $reflectionClass = new ReflectionClass($middleware);
+            if (!$reflectionClass->isInstantiable()) {
+                throw new Exception('middleware conf with a wrong,cant instance');
+            }
+            $middleware = $reflectionClass->newInstance();
+            if (!$middleware instanceof Middleware) {
+                throw new Exception('middleware must extends Middleware Facade');
+            }
+            $middleware->run();
+        }
+        unset($middlewares[$key]);
     }
 }

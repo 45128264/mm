@@ -1,6 +1,8 @@
 <?php
 /* @var $this \Qyk\Mm\Facade\Response */
 ?>
-this is only test <?= $user_id ?>
-<?php echo PHP_EOL; ?>
-this is crsfToken <?= $this->getCrsfToken() ?>
+<form class="login" action="/login">
+    <input type="text" name="username" placeholder="用户名">
+    <input type="text" name="<?= $this->getCsrfPostKey() ?>" hidden value="<?= $this->createCsrfToken() ?>"/>
+    <input type="submit" value="Log In">
+</form>

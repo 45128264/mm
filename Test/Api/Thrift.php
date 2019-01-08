@@ -3,7 +3,7 @@
 namespace Test\Api;
 
 use Qyk\Mm\Facade\AbstractConnectService;
-use Qyk\Mm\Singleton;
+use Qyk\Mm\Traits\SingletonTrait;
 use Qyk\Mm\Stage;
 use Thrift\Protocol\TBinaryProtocol;
 use Thrift\Transport\TBufferedTransport;
@@ -11,7 +11,7 @@ use Thrift\Transport\TSocket;
 
 class Thrift extends AbstractConnectService
 {
-    use Singleton;
+    use SingletonTrait;
 
     /**
      * @var TBufferedTransport

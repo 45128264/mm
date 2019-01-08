@@ -2,7 +2,6 @@
 
 namespace Qyk\Mm\Provider;
 
-use Qyk\Mm\Facade\Config;
 use Qyk\Mm\Facade\ErrorListener;
 use Qyk\Mm\Stage;
 use Throwable;
@@ -20,15 +19,6 @@ class ErrorListenerProvide extends ErrorListener
      * @var []
      */
     private $config;
-
-    /**
-     * 获取当前服务对应名称，方便识别当前服务的类型
-     * @return string
-     */
-    public function getName(): string
-    {
-        return 'ErrorListenerProvide';
-    }
 
     /**
      * 开始监听异常
@@ -52,7 +42,7 @@ class ErrorListenerProvide extends ErrorListener
     public function errorHandler($errno, $errstr, $errfile = '', $errline = 0)
     {
         $contents = date('H:i:s') . "\t{$errfile}:{$errline}\t{$errstr}\terrno:{$errno}\n";
-        $this->addLog('error', $contents);
+        Stage::log('error', $contents);
     }
 
     /**
@@ -69,7 +59,7 @@ class ErrorListenerProvide extends ErrorListener
         $trace       = $e->getTraceAsString();
         $code        = $e->getCode();
         $contents    = "$dateTime\t{$file}({$line})\t$code\t$msg\n$trace\n\n";
-        $this->addLog('exp', $contents);
+        Stage::log('exp', $contents);
     }
 
     /**
@@ -98,22 +88,5 @@ class ErrorListenerProvide extends ErrorListener
     protected static function isFatal($type)
     {
         return in_array($type, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE]);
-    }
-
-    /**
-     * 记录日志
-     * @param string $type
-     * @param        $content
-     */
-    protected function addLog(string $type, $content)
-    {
-        if (!is_dir(RUNTIME_LOG_PATH)) {
-            mkdir(RUNTIME_LOG_PATH, 0777, true);
-        }
-        $file = RUNTIME_LOG_PATH . '/' . $type . '_' . date('ymd');
-        file_put_contents($file . '.log', $content, FILE_APPEND);
-        if (filesize($file . '.log') > 1000000000) {
-            rename($file . 'log', $file . '.' . date('His') . '.log');
-        }
     }
 }
