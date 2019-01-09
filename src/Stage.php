@@ -51,7 +51,7 @@ class Stage
      */
     public static function app()
     {
-        return self::$instance->app;
+        return self::instance()->app;
     }
 
     /**

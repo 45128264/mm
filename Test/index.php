@@ -16,3 +16,5 @@ $_SERVER['REQUEST_URI']    = 'users/105/1/card';
 Stage::instance()
     ->define('test', __DIR__, 'Test')
     ->run(new ShellApp());
+$conf = Stage::app()->config->get('mysql', 'loan');
+var_dump($conf);
