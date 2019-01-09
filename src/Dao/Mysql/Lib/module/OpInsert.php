@@ -92,6 +92,6 @@ class OpInsert extends BaseOp
      */
     public function run()
     {
-        return InsertRt::instance()->run($this->getDbHandel(false), $this->getSql(), $this->isDirectBySql());
+        return $this->getRt(InsertRt::instance());
     }
 }

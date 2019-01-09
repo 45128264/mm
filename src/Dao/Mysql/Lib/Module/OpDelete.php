@@ -44,6 +44,6 @@ class OpDelete extends BaseOp
      */
     public function run()
     {
-        return ModifyRt::instance()->run($this->getDbHandel(false), $this->getSql(), $this->isDirectBySql());
+        return $this->getRt(ModifyRt::instance());
     }
 }

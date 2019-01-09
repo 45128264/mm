@@ -31,7 +31,7 @@ class BaseRt
      * @return $this
      * @throws \Exception
      */
-    public function run(DbHandel $dbHandel, string $sql, $isDetectSql = false)
+    protected function run(DbHandel $dbHandel, string $sql, $isDetectSql = false)
     {
         $this->dbLink    = $dbHandel->getDBLink();
         $this->executeRt = $dbHandel->excute($sql, $isDetectSql);

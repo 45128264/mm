@@ -9,12 +9,17 @@ namespace Qyk\Mm\Dao\Mysql\Lib\Module;
  */
 class OpSelect extends BaseOp
 {
+    private $sql = '';
+
     /**
      * 获取sql
      * @return mixed
      */
     public function getSql()
     {
+        if ($this->isDirectBySql() && $this->sql) {
+            return $this->sql;
+        }
         $fn = function () {
             $table = $this->getTable();
             if (isset($this->bindings['join'])) {
@@ -149,7 +154,9 @@ class OpSelect extends BaseOp
      */
     public function selectBySql(string $sql)
     {
-        return SelectRt::instance()->run($this->getDbHandel(false), $sql, true);
+        $this->directBySql();
+        $this->sql = $sql;
+        return $this->getRt(SelectRt::instance(), false);
     }
 
 
@@ -160,6 +167,6 @@ class OpSelect extends BaseOp
      */
     public function run()
     {
-        return SelectRt::instance()->run($this->getDbHandel(false), $this->getSql(), $this->isDirectBySql());
+        return $this->getRt(SelectRt::instance(), false);
     }
 }

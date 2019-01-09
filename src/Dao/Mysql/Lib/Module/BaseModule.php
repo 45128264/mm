@@ -80,12 +80,12 @@ class BaseModule
      * 判断是否是直接使用sql
      * @return bool
      */
-    protected function isDirectBySql():bool
+    protected function isDirectBySql(): bool
     {
         $fn = function () {
-           return $this->isDirectFromSql;
+            return $this->isDirectFromSql;
         };
-       return $fn->call($this->baseMysql);
+        return $fn->call($this->baseMysql);
     }
 
     /**
@@ -125,10 +125,10 @@ class BaseModule
 
     /**
      * 初始化连接
-     * @param bool $isWriter  是否是写操作，是则使用主库，否则会进行主从筛选
+     * @param bool $isWriter 是否是写操作，是则使用主库，否则会进行主从筛选
      * @return mixed
      */
-    protected function getDbHandel($isWriter = true): DbHandel
+    protected function getDbHandel($isWriter = false): DbHandel
     {
         return DbHandel::instance($this->getDb())->setIsWriter($isWriter);
     }

@@ -55,7 +55,7 @@ class OpUpdate extends BaseOp
     /**
      * 自减
      * @param string $column
-     * @param int    $val
+     * @param int $val
      * @param string $tableAlias
      * @return $this
      * @throws Exception
@@ -71,7 +71,7 @@ class OpUpdate extends BaseOp
     /**
      * 自增
      * @param string $column
-     * @param int    $val
+     * @param int $val
      * @param string $tableAlias
      * @return $this
      * @throws Exception
@@ -86,7 +86,7 @@ class OpUpdate extends BaseOp
 
     /**
      * 更新多个字段
-     * @param array  $records
+     * @param array $records
      * @param string $tableAlias
      * @return $this
      * @throws Exception
@@ -114,7 +114,7 @@ class OpUpdate extends BaseOp
     /**
      * case when 批量更新
      * @param string $key
-     * @param array  $keyValRecords
+     * @param array $keyValRecords
      * @return $this
      * @throws Exception
      */
@@ -191,6 +191,8 @@ class OpUpdate extends BaseOp
      */
     public function run()
     {
-        return ModifyRt::instance()->run($this->getDbHandel(false), $this->getSql(), $this->isDirectBySql());
+        return $this->getRt(ModifyRt::instance());
     }
+
+
 }
