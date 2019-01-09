@@ -2,44 +2,54 @@
 
 namespace Qyk\Mm\Dao\Mysql;
 
+use Closure;
+use Qyk\Mm\Traits\SingletonTrait;
+use Throwable;
+
 /**
  * mysql事务层级识别
  */
 class MysqlTransaction
 {
-    private static $startTransactionNum = 0;
+    use SingletonTrait;
+
+    /**
+     * 事物包裹层级
+     * @var int
+     */
+    private $wrapNums = 0;
 
     /**
      * 获取当前事务包裹标志的层级
      * @return int
      */
-    public static function getWrapNums(): int
+    public function getWrapNums(): int
     {
-        return self::$startTransactionNum;
+        return $this->wrapNums;
     }
 
     /**
-     * 开启事务包裹标志，类似<div>
+     * commit 当callback返回true
+     * rollback 当callback返回false
+     * @param Closure $callback return bool
+     * @throws Throwable
      */
-    public static function openWrap()
+    public function auto(Closure $callback)
     {
-        self::$startTransactionNum++;
-    }
-
-    /**
-     * 关闭事务包裹标志，类似</div>
-     */
-    public static function closeWrap()
-    {
-        self::$startTransactionNum = self::$startTransactionNum < 1 ? 0 : --self::$startTransactionNum;
-    }
-
-    /**
-     * 清除事务包裹标志
-     */
-    public static function clearWrap()
-    {
-        self::$startTransactionNum = 0;
+        //startTransaction
+        try {
+            $this->start();
+            $rt = $callback();
+            if ($rt) {
+                $this->commit();
+            } else {
+                $this->rollback();
+            }
+        } catch (Throwable $e) {
+            //            $this->rollback();
+            throw $e;
+        }
+        //endTransaction
     }
 }
 
