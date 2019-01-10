@@ -90,8 +90,9 @@ class BaseModule
 
     /**
      * 数据表的别名
+     * @return null|string
      */
-    protected function getAlias(): string
+    protected function getAlias()
     {
         $fn = function () {
             return $this->tmpAlias;

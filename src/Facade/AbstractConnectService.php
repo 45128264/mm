@@ -17,24 +17,29 @@ use Qyk\Mm\Stage;
  */
 abstract class AbstractConnectService
 {
-    final protected function connect()
+    /**
+     * 建立连接
+     * @param  $params
+     */
+    final protected function connect($params = null)
     {
-        Stage::app()->bindTerminate($this->getAbstractName(), [$this, 'close']);
-        $this->buildConnect();
+        Stage::app()->bindTerminate(get_called_class(), [$this, 'close']);
+        $this->buildConnect($params);
     }
 
     /**
      * 建立连接
+     * @param  $params
      * @return mixed
      */
-    abstract protected function buildConnect();
+    abstract protected function buildConnect($params = null);
 
     /**
      * 关闭操作
      */
     final public function close()
     {
-        Stage::app()->unsetTerminate($this->getAbstractName());
+        Stage::app()->unsetTerminate(get_called_class());
         $this->distConnect();
     }
 
@@ -43,11 +48,5 @@ abstract class AbstractConnectService
      */
     abstract protected function distConnect();
 
-    /**
-     * 获取别名
-     */
-    protected function getAbstractName()
-    {
-        return get_called_class();
-    }
+
 }

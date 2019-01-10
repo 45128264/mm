@@ -9,6 +9,9 @@
 namespace Test\Controller;
 
 use http\Exception;
+use Qyk\Mm\Dao\Mysql\MysqlTransaction;
+use Test\Dao\Project1Table;
+use Test\Dao\ProjectTable;
 
 /**
  * 用户
@@ -34,9 +37,16 @@ class UsersController
 
     public function cardDetail(int $userId, int $cardId)
     {
+
+        MysqlTransaction::instance()->auto([$this, 'test']);
         return [
             'user_id' => $userId,
             'card_id' => $cardId,
         ];
+    }
+
+    public function test()
+    {
+        ProjectTable::instance()->insert('content', 11)->run();
     }
 }

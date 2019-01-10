@@ -66,10 +66,9 @@ class BaseMysql
 
     protected $table           = 'load';       // 数据表
     protected $db              = 'loan';       // 数据库
-    private   $bindings        = [];           // 组织数据
-    private   $tmpAlias        = null;         // 表别名
-    private   $isDirectFromSql = false;        // 是否是直接使用sql
-    private   $executeRt;                      // 执行结果
+    protected   $bindings        = [];           // 组织数据
+    protected   $tmpAlias        = null;         // 表别名
+    protected   $isDirectFromSql = false;        // 是否是直接使用sql
 
     /**
      * 数据刷新

@@ -72,7 +72,7 @@ class ResponseProvider extends Response
      */
     protected function renderJsonContentError(throwable $e)
     {
-        $isShowExp = Stage::app()->config->get('app.debug.show_exp');
+        $isShowExp = Stage::app()->config->get('app.runtime.debug.show_exp');
         if ($isShowExp) {
             $contents = ['result' => false, 'msg' => 'exp', 'data' => [
                 'file'  => $e->getFile(),

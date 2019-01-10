@@ -44,7 +44,7 @@ abstract class Response extends Facade
             $router     = RouterContainer::instance()->getRequestRouter();
             $controller = 'render' . $router->getResponseType() . 'Content';
             if (!method_exists($this, $controller)) {
-                echo 'fuck';
+                echo 'missing method=>' . $controller;
                 exit;
             }
             $this->router = $router;

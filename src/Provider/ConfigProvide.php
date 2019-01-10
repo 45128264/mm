@@ -27,10 +27,10 @@ class ConfigProvide extends Config
      */
     public function get($cacheKey, string $key = null)
     {
-        $keys = explode('.', $cacheKey);
         if ($key) {
-            $keys[] = $key;
+            $cacheKey .= '.' . $key;
         }
+        $keys = explode('.', $cacheKey);
         $cacheKey = array_shift($keys);
         if (isset($this->config[$cacheKey])) {
             return $this->getArrayDeepVal($this->config[$cacheKey], $keys);
@@ -57,7 +57,7 @@ class ConfigProvide extends Config
         $key = array_shift($keys);
         if (!isset($val[$key])) {
             //todo exception
-            trigger_error('missing key val with key:' . $key, E_NOTICE);
+            trigger_error('missing key val with key:' . $key);
             return false;
         }
         if (!empty($keys)) {

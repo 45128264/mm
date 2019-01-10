@@ -13,8 +13,8 @@ $_SERVER['REQUEST_URI']    = 'thrift/hello';
 $_SERVER['REQUEST_URI']    = 'users/105/1/card';
 //users/{user_id}/{card_id}/card
 
+define('DEBUG_PRINT', true);
+
 Stage::instance()
     ->define('test', __DIR__, 'Test')
     ->run(new ShellApp());
-$conf = Stage::app()->config->get('mysql', 'loan');
-var_dump($conf);
