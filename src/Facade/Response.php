@@ -52,7 +52,6 @@ abstract class Response extends Facade
             $content = $this->router->invokeController();
             $this->$controller($content);
             $router->invokeAfterMiddleware();
-            $this->terminate();
             $this->tickEnd(60);
 
         } catch (throwable $e) {
@@ -187,15 +186,6 @@ abstract class Response extends Facade
      */
     abstract protected function renderJsonContentError(throwable $e);
 
-    /**
-     * 关闭操作
-     */
-    protected function terminate()
-    {
-        foreach (Stage::app()->terminateContainer as $callback) {
-            $callback();
-        }
-    }
 
     /**
      * 获取csrf对应的form变量名称
