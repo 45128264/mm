@@ -10,6 +10,7 @@ namespace Test\Controller;
 
 use http\Exception;
 use Qyk\Mm\Dao\Mysql\MysqlTransaction;
+use Qyk\Mm\Dao\Redis\RedisHelper;
 use Test\Dao\Project1Table;
 use Test\Dao\ProjectTable;
 
@@ -38,10 +39,13 @@ class UsersController
     public function cardDetail(int $userId, int $cardId)
     {
 
-        MysqlTransaction::instance()->auto([$this, 'test']);
+        //        MysqlTransaction::instance()->auto([$this, 'test']);
+        $rt = RedisHelper::instance()->set('test1', 121, ['nx', 'ex' => 10]);
+
         return [
             'user_id' => $userId,
             'card_id' => $cardId,
+            'rt'      => $rt
         ];
     }
 

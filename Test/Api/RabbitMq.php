@@ -6,13 +6,13 @@ use Closure;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-use Qyk\Mm\Facade\AbstractConnectService;
-use Qyk\Mm\Traits\SingletonTrait;
 use Qyk\Mm\Stage;
+use Qyk\Mm\Traits\ConnectServiceTrait;
+use Qyk\Mm\Traits\SingletonTrait;
 
-class RabbitMq extends AbstractConnectService
+class RabbitMq
 {
-    use SingletonTrait;
+    use SingletonTrait,ConnectServiceTrait;
 
     /**
      * 队列的参数
@@ -186,10 +186,12 @@ class RabbitMq extends AbstractConnectService
         $this->channel    = $this->connection->channel();
     }
 
+
     /**
-     * 关闭操作
+     * 关闭链接
+     * @return mixed
      */
-    protected function distConnect()
+    public function close()
     {
         if (!$this->connection) {
             return;

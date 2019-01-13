@@ -14,7 +14,6 @@ $_SERVER['REQUEST_URI']    = 'users/105/1/card';
 //users/{user_id}/{card_id}/card
 
 define('DEBUG_PRINT', true);
-
 Stage::instance()
     ->define('test', __DIR__, 'Test')
     ->run(new ShellApp());

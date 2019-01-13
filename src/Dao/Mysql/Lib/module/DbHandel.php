@@ -5,17 +5,17 @@ namespace Qyk\Mm\Dao\Mysql\Lib\Module;
 use Exception;
 use mysqli;
 use Qyk\Mm\Dao\Mysql\MysqlTransaction;
-use Qyk\Mm\Facade\AbstractConnectService;
 use Qyk\Mm\Stage;
+use Qyk\Mm\Traits\ConnectServiceTrait;
 use Qyk\Mm\Traits\DebugTrait;
 use Qyk\Mm\Traits\SingletonTrait;
 
 /**
  * mysqli连接
  */
-class DbHandel extends AbstractConnectService
+class DbHandel
 {
-    use SingletonTrait, DebugTrait;
+    use SingletonTrait, DebugTrait,ConnectServiceTrait;
     /**
      * 数据库命
      * @var string
@@ -190,10 +190,11 @@ class DbHandel extends AbstractConnectService
         }
     }
 
+
     /**
      * 关闭操作
      */
-    protected function distConnect()
+    public function close()
     {
         /** @var mysqli $dbLink */
         foreach ($this->dbLink as $dbLink) {

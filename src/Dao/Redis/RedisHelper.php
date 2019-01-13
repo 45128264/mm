@@ -9,33 +9,79 @@
 namespace Qyk\Mm\Dao\Redis;
 
 
-use Qyk\Mm\Facade\AbstractConnectService;
+use Exception;
+use Qyk\Mm\Stage;
+use Qyk\Mm\Traits\ConnectServiceTrait;
 use Qyk\Mm\Traits\SingletonTrait;
+use Redis;
 
 /**
  * redis服务
  * Class RedisHelper
  * @package Qyk\Mm\Dao\Redis
+ * @method  bool set($key, $val, array $params = ['ex' => 0]);
  */
-class RedisHelper extends AbstractConnectService
+class RedisHelper
 {
-    use SingletonTrait;
+    use SingletonTrait, ConnectServiceTrait;
+    /**
+     * redis对应得库
+     * @var string
+     */
+    protected $db = 'default';
+    /**
+     * @var Redis
+     */
+    private $dbLink;
+
 
     /**
-     * 建立连接
-     * @param  $params
+     * 魔法函数
+     * @param $name
+     * @param $arguments
      * @return mixed
+     * @throws Exception
      */
-    protected function buildConnect($params = null)
+    public function __call($name, $arguments)
     {
-        // TODO: Implement buildConnect() method.
+        return call_user_func_array([$this->getRedisClient(), $name], $arguments);
     }
 
     /**
-     * 关闭操作
+     * 建立连接
+     * @return Redis
+     * @throws Exception
      */
-    protected function distConnect()
+    protected function getRedisClient()
     {
-        // TODO: Implement distConnect() method.
+        if ($this->dbLink) {
+            return $this->dbLink;
+        }
+        $conf = Stage::app()->config->get('app.redis.' . $this->db);
+        if (!isset($conf['host'])) {
+            throw new Exception('missing redis conf');
+        }
+        $this->dbLink = new Redis();
+        $rt           = $this->dbLink->connect($conf['host'], $conf['port']);
+        if (!$rt) {
+            throw new Exception('cant connect');
+        }
+        if (isset($conf['auth'])) {
+            $this->dbLink->auth($conf['auth']);
+        }
+        if (isset($conf['db_index'])) {
+            $this->dbLink->select($conf['db_index']);
+        }
+        return $this->dbLink;
+    }
+
+    /**
+     * 关闭链接
+     */
+    public function close()
+    {
+        if ($this->dbLink) {
+            $this->dbLink->close();
+        }
     }
 }

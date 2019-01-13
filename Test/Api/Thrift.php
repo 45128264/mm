@@ -3,15 +3,16 @@
 namespace Test\Api;
 
 use Qyk\Mm\Facade\AbstractConnectService;
+use Qyk\Mm\Traits\ConnectServiceTrait;
 use Qyk\Mm\Traits\SingletonTrait;
 use Qyk\Mm\Stage;
 use Thrift\Protocol\TBinaryProtocol;
 use Thrift\Transport\TBufferedTransport;
 use Thrift\Transport\TSocket;
 
-class Thrift extends AbstractConnectService
+class Thrift
 {
-    use SingletonTrait;
+    use SingletonTrait,ConnectServiceTrait;
 
     /**
      * @var TBufferedTransport
@@ -51,9 +52,10 @@ class Thrift extends AbstractConnectService
     }
 
     /**
-     * 关闭操作
+     * 关闭链接
+     * @return mixed
      */
-    protected function distConnect()
+    public function close()
     {
         if (!$this->transport) {
             return;
