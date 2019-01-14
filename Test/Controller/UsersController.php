@@ -40,8 +40,14 @@ class UsersController
     {
 
         //        MysqlTransaction::instance()->auto([$this, 'test']);
-        $rt = RedisHelper::instance()->set('test1', 121, ['nx', 'ex' => 10]);
+        $help = RedisHelper::instance();
+        //        $rt = RedisHelper::instance()->set('test1', 121, ['nx', 'ex' => 10]);
 
+        $keyval = ['test' => '1212', 'test1' => 'test1'];
+        $params = ['nx', 'ex' => 60];
+        $rt     = $help->luaMSet($keyval, $params);
+        var_dump($rt);
+        exit;
         return [
             'user_id' => $userId,
             'card_id' => $cardId,
