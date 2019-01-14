@@ -11,6 +11,7 @@ namespace Test\Controller;
 use http\Exception;
 use Qyk\Mm\Dao\Mysql\MysqlTransaction;
 use Qyk\Mm\Dao\Redis\RedisHelper;
+use Qyk\Mm\Traits\DebugTrait;
 use Test\Dao\Project1Table;
 use Test\Dao\ProjectTable;
 
@@ -21,6 +22,7 @@ use Test\Dao\ProjectTable;
  */
 class UsersController
 {
+    use DebugTrait;
     public function login()
     {
         return [
@@ -43,11 +45,11 @@ class UsersController
         $help = RedisHelper::instance();
         //        $rt = RedisHelper::instance()->set('test1', 121, ['nx', 'ex' => 10]);
 
+        $this->debugPrint();
         $keyval = ['test' => '1212', 'test1' => 'test1'];
         $params = ['nx', 'ex' => 60];
         $rt     = $help->luaMSet($keyval, $params);
-        var_dump($rt);
-        exit;
+
         return [
             'user_id' => $userId,
             'card_id' => $cardId,

@@ -95,14 +95,62 @@ class RedisHelper
      * 原子性，lua批量执行set($key, $val, array $params)
      * @param array $array ['key' => 'val', ...]
      * @param array $params ['xx', 'nx', 'px' => millSeconds, 'ex' => seconds]
+     * @param bool $isRollback 如果批量操作失败，执行回滚（非原子，只有程序执行中没有异常中断才会进行回滚）
      * @return mixed
      * @throws Exception
      */
-    public function luaMSet(array $array, array $params = [])
+    public function luaMSet(array $array, array $params = [], $isRollback = true)
     {
-        $lua    = <<<lof
-       local info = {};
+        $exType = '';
+        $exNums = 0;
+        if (isset($params['ex'])) {
+            $exType = 'ex';
+            $exNums = $params['ex'];
+            unset($params['ex']);
+        }
+        if (isset($params['px'])) {
+            $exType = 'px';
+            $exNums = $params['px'];
+            unset($params['px']);
+        }
+        $kvStr          = $this->array2Str($array, '|', '=');
+        $otherParamsStr = $this->array2Str($params, ' ', ' ');
+        return $this->getRedisClient()->eval($this->getMsetLua(), [$kvStr, $exType, $exNums, $otherParamsStr, $isRollback]);
+
+    }
+
+    /**
+     * 将2维数组转成string
+     * @param array $array
+     * @param string $glub
+     * @param string $join
+     * @param bool $ignoreNumberKey
+     * @return string
+     */
+    protected function array2Str(array $array, string $glub, string $join = '=', bool $ignoreNumberKey = true)
+    {
+        $str = [];
+        foreach ($array as $key => $val) {
+            if ($ignoreNumberKey && is_numeric($key)) {
+                $str[] = $val;
+            } else {
+                $str[] = $key . $join . $val;
+            }
+        }
+        return implode($glub, $str);
+    }
+
+    /**
+     * lua 批量模仿set
+     * @return string
+     */
+    protected function getMsetLua(): string
+    {
+return <<<eof
+       local info = {};       
+       local successKeys ={};
        
+       -- 记录keyValue              
        local function insertInfo(str,index,lasIndex)
             local tmp,key,val,lastEqIndex;
             local glubEq = '=';
@@ -115,6 +163,7 @@ class RedisHelper
             end   
        end  
        
+       -- 解析keyValue
        local function getKeyValues()
             local str = ARGV[1];
             local glubJoin = '|';
@@ -132,12 +181,11 @@ class RedisHelper
             end           
        end  
        
-       local successKeys ={};
+       -- 模仿redis set操作
        local function callRedis(info)
            local exType=ARGV[2];
            local exNums=ARGV[3];
-           local otherParams = ARGV[4];
-           
+           local otherParams = ARGV[4];           
            getKeyValues();                                 
            for k,v in pairs(info) do           
                if exType and tonumber(exNums) > 0 then
@@ -162,51 +210,15 @@ class RedisHelper
            return true;
        end 
        
-       if not callRedis(info) then
-           -- 进行回滚
+       local rt = callRedis(info);
+       
+       -- 进行回滚
+       if not rt and ARGV[5] == '1' then
            for k,v in pairs(successKeys) do
                 redis.call('del',v);
            end
-           return false;
        end
-       return true;
-lof;
-        $exType = '';
-        $exNums = 0;
-        if (isset($params['ex'])) {
-            $exType = 'ex';
-            $exNums = $params['ex'];
-            unset($params['ex']);
-        }
-        if (isset($params['px'])) {
-            $exType = 'px';
-            $exNums = $params['px'];
-            unset($params['px']);
-        }
-        $kvStr          = $this->array2Str($array, '|', '=');
-        $otherParamsStr = $this->array2Str($params, ' ', ' ');
-        return $this->getRedisClient()->eval($lua, [$kvStr, $exType, $exNums, $otherParamsStr]);
-
-    }
-
-    /**
-     * 将2维数组转成string
-     * @param array  $array
-     * @param string $glub
-     * @param string $join
-     * @param bool   $ignoreNumberKey
-     * @return string
-     */
-    protected function array2Str(array $array, string $glub, string $join = '=', bool $ignoreNumberKey = true)
-    {
-        $str = [];
-        foreach ($array as $key => $val) {
-            if ($ignoreNumberKey && is_numeric($key)) {
-                $str[] = $val;
-            } else {
-                $str[] = $key . $join . $val;
-            }
-        }
-        return implode($glub, $str);
+      return rt;
+eof;
     }
 }
