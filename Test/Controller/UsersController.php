@@ -48,7 +48,7 @@ class UsersController
         $this->debugPrint();
         $keyval = ['test' => '1212', 'test1' => 'test1'];
         $params = ['nx', 'ex' => 60];
-        $rt     = $help->luaMSet($keyval, $params);
+        $rt     = $help->lRem($keyval, $params);
 
         return [
             'user_id' => $userId,
