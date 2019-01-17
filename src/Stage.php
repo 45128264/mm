@@ -89,7 +89,7 @@ class Stage
     private function addErrorListener()
     {
         if (!$this->erroEvenListener) {
-            $this->erroEvenListener = new ErrorListenerProvide();
+            $this->erroEvenListener = ErrorListenerProvide::instance();
         }
         $this->erroEvenListener->listen();
     }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Conmand\Service;
+
 use Qyk\Mm\Utils\AbstractDaemonTask;
 
 /**
@@ -8,7 +10,6 @@ use Qyk\Mm\Utils\AbstractDaemonTask;
  * Date: 2019/1/16
  * Time: 16:07
  */
-
 class DaemonFinanceDetecter extends AbstractDaemonTask
 {
 

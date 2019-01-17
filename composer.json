@@ -19,12 +19,14 @@
     "apache/thrift": "^1.0@dev",
     "php-amqplib/php-amqplib": "^2.8@dev",
     "ext-mysqli": "*",
-    "ext-posix": "*"
+    "ext-posix": "*",
+    "ext-pcntl": "*"
   },
   "autoload": {
     "psr-4": {
       "Qyk\\Mm\\": "src",
-      "Test\\": "Test"
+      "Test\\": "Test",
+      "Conmand\\": "Conmand"
     }
   }
 }

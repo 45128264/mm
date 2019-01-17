@@ -22,9 +22,27 @@ abstract class AbstractDaemonTask
     protected $maxThrowExpTimes = 5;
 
     /**
+     * @var ElegantStopUtils
+     */
+    protected $elegantStopUtil;
+
+    final public function setElegantStopUtils(ElegantStopUtils $elegantStopUtil)
+    {
+        $this->elegantStopUtil = $elegantStopUtil;
+    }
+
+    /**
      * 公共执行入口
      */
     abstract public function run();
+
+    /**
+     * 优雅关机，在最小完整的功能模块里边调用， 尝试关闭当前的任务进程
+     */
+    protected function attemptTerminate()
+    {
+        $this->elegantStopUtil->attemptTerminate();
+    }
 
     /**
      * 获取当前任务名称
@@ -42,7 +60,7 @@ abstract class AbstractDaemonTask
     }
 
     /**
-     * 执行中抛出异常
+     * 执行中,有抛出异常的情况
      */
     public function runningWithExp()
     {

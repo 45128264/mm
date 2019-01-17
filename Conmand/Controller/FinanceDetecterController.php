@@ -1,5 +1,7 @@
 <?php
 
+namespace Conmand\Controller;
+
 use Qyk\Mm\Utils\Daemon;
 
 /**
@@ -17,8 +19,8 @@ class FinanceDetecterController
 
     public function __construct()
     {
-        $this->daemonServer = new Daemon();
-        $this->bindTasks($this->getTasks());
+        // $this->daemonServer = new Daemon();
+        //  $this->bindTasks($this->getTasks());
     }
 
     /**
@@ -26,7 +28,8 @@ class FinanceDetecterController
      */
     public function restart()
     {
-        $this->daemonServer->restart();
+        echo 'this is my test';
+        //        $this->daemonServer->restart();
     }
 
     /**

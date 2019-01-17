@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f0266d52495245742b74c2023c2b8a2",
+    "content-hash": "5de3a82e4eb97f4e2616a26ed2f9a062",
     "packages": [
         {
             "name": "apache/thrift",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/apache/thrift.git",
-                "reference": "a597725bcbfc261caae834fd763dd3734ab1ffce"
+                "reference": "c9ac8d2953a4806cc93aa4ff2e700623ecad980c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/apache/thrift/zipball/a597725bcbfc261caae834fd763dd3734ab1ffce",
-                "reference": "a597725bcbfc261caae834fd763dd3734ab1ffce",
+                "url": "https://api.github.com/repos/apache/thrift/zipball/c9ac8d2953a4806cc93aa4ff2e700623ecad980c",
+                "reference": "c9ac8d2953a4806cc93aa4ff2e700623ecad980c",
                 "shasum": ""
             },
             "require": {
@@ -30,7 +30,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.0-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -50,8 +50,11 @@
                 }
             ],
             "description": "Apache Thrift RPC system",
-            "homepage": "http://thrift.apache.org/",
-            "time": "2018-12-27T18:03:23+00:00"
+            "homepage": "http://thrift.apache.org",
+            "keywords": [
+                "rpc"
+            ],
+            "time": "2019-01-09T22:05:34+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -133,20 +136,21 @@
         },
         {
             "name": "php-amqplib/php-amqplib",
-            "version": "v2.8.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-amqplib/php-amqplib.git",
-                "reference": "7df8553bd8b347cf6e919dd4a21e75f371547aa0"
+                "reference": "853eed5d4bc1309910c4cd25b5929370f6191096"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/7df8553bd8b347cf6e919dd4a21e75f371547aa0",
-                "reference": "7df8553bd8b347cf6e919dd4a21e75f371547aa0",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/853eed5d4bc1309910c4cd25b5929370f6191096",
+                "reference": "853eed5d4bc1309910c4cd25b5929370f6191096",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
+                "ext-sockets": "*",
                 "php": ">=5.4.0"
             },
             "replace": {
@@ -157,9 +161,6 @@
                 "phpunit/phpunit": "^4.8",
                 "scrutinizer/ocular": "^1.1",
                 "squizlabs/php_codesniffer": "^2.5"
-            },
-            "suggest": {
-                "ext-sockets": "Use AMQPSocketConnection"
             },
             "type": "library",
             "extra": {
@@ -190,6 +191,11 @@
                     "name": "Raúl Araya",
                     "email": "nubeiro@gmail.com",
                     "role": "Maintainer"
+                },
+                {
+                    "name": "Luke Bakken",
+                    "email": "luke@bakken.io",
+                    "role": "Maintainer"
                 }
             ],
             "description": "Formerly videlalvaro/php-amqplib.  This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
@@ -199,7 +205,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2018-10-23T18:48:24+00:00"
+            "time": "2019-01-08T19:41:15+00:00"
         },
         {
             "name": "psr/log",
@@ -261,7 +267,10 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.0.0",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-mysqli": "*",
+        "ext-posix": "*",
+        "ext-pcntl": "*"
     },
     "platform-dev": []
 }

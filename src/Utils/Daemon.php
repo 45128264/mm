@@ -8,6 +8,8 @@
 
 namespace Qyk\Mm\Utils;
 
+use Throwable;
+
 /**
  * php 守护进程
  * 守护进程是一个在后台运行并且不受任何终端控制的进程
@@ -25,6 +27,7 @@ class Daemon
      * @var array
      */
     protected $taskContainer = [];
+
     /**
      * pid 储存文件
      * @var string
@@ -32,21 +35,37 @@ class Daemon
     protected $pidFileLocation;
 
     /**
-     * Daemon constructor.
+     * 进程是否还在运行中
+     * @var bool
      */
-    public function __construct()
-    {
+    protected $isOldPidRunning = false;
 
+    /**
+     * 优雅关机插件
+     * @var ElegantStopUtils
+     */
+    protected $elegantStopUtil;
+
+    /**
+     * Daemon constructor.
+     * @param string $taskName 任务名称，必须是唯一的
+     */
+    public function __construct(string $taskName)
+    {
+        $this->initElegantStopUtil($taskName);
+        $this->initOldPidIsRunning();
+        $this->pidFileLocation = '/tmp/daemon_' . $taskName . '.pid';
     }
 
     /**
      * 绑定任务
-     * @param array|string $tasks
+     * @param AbstractDaemonTask $task
      * @return Daemon
      */
-    public function bindTasks($tasks)
+    public function bindTask(AbstractDaemonTask $task)
     {
-        $this->taskContainer = array_merge($this->taskContainer, $tasks);
+        $task->setElegantStopUtils($this->elegantStopUtil);
+        $this->taskContainer = array_merge($this->taskContainer, $task);
         return $this;
     }
 
@@ -55,10 +74,12 @@ class Daemon
      */
     public function start()
     {
-        if ($this->isRunning()) {
+        if ($this->isOldPidRunning) {
             $this->throwExp('Daemon already running with PID:');
         }
-        $this->daemonize();
+        $this->fork();
+        $this->setSid();
+        $this->bindSigHandle();
         $this->doTask();
     }
 
@@ -68,6 +89,8 @@ class Daemon
     public function restart()
     {
         $this->stop();
+        $this->elegantStopUtil->taskAttemptStart();
+        $this->isOldPidRunning = false;
         $this->start();
     }
 
@@ -76,37 +99,47 @@ class Daemon
      */
     public function stop()
     {
-        //todo 需要优雅关机,这块需要使用对应的缓存功能
+        if ($this->isOldPidRunning) {
+            $this->elegantStopUtil->taskTerminate();
+        }
     }
-
-    //region daemonize
 
     /**
-     *  实例化守护
+     * 设置回话
      */
-    protected function daemonize()
+    protected function setSid()
     {
-        $this->fork();
-        $this->identity();
-        $this->initProcess();
-        $this->signal();
+        $userID  = 65534;
+        $groupID = 65533;
+        if (!posix_setgid($groupID) || !posix_setuid($userID)) {
+            $this->throwExp('could not set identity');
+        }
+        $pid = posix_getpid();
+        if (!posix_setsid()) {
+            $this->throwExp('could not make a current process a session leader');
+        }
+        chdir('/');
+        umask(0); // 修改文件模式，让进程有较大权限，保证进程有读写执行权限
+        //关闭打开的文件描述符
+        fclose(STDIN);
+        fclose(STDOUT);
+        fclose(STDERR);
+        file_put_contents($this->pidFileLocation, $pid);
     }
-
 
     /**
      * 进程是否正在运行中
      */
-    private function isRunning(): bool
+    private function initOldPidIsRunning()
     {
         if (!is_file($this->pidFileLocation)) {
-            return false;
+            return;
         }
         $oldPid = file_get_contents($this->pidFileLocation);
         // kill -0 pid  作用是用来检测指定的进程PID是否存在, 存在返回0, 反之返回1
         if ($oldPid !== false && posix_kill(trim($oldPid), 0)) {
-            return true;
+            $this->isOldPidRunning = true;
         }
-        return false;
     }
 
     /**
@@ -119,39 +152,49 @@ class Daemon
                 $this->throwExp('fork failed');
                 break;
             case 0:     // 在子进程执行线程内返回0,
-                exit(); //退出主进程
                 break;
             default:    // 成功时，在父进程执行线程内返回产生的子进程的PID
+                exit(); //退出主进程
         }
     }
 
     /**
-     *
+     * 绑定事件监听
      */
-    private function identity()
+    private function bindSigHandle()
     {
+        declare(ticks=1);
+        pcntl_signal(SIGTERM, function () {
+            $this->throwExp('shutdown signal');
+        });
 
+        pcntl_signal(SIGCHLD, function () {
+            while (pcntl_waitpid(-1, $status, WNOHANG) > 0) ;
+        });
     }
 
-    private function initProcess()
-    {
-
-    }
 
     /**
-     *
+     * 遍历执行指定的任务
      */
-    private function signal()
-    {
-
-    }
-
-    //endregion
-
-
     private function doTask()
     {
-
+        while (!empty($this->taskContainer)) {
+            /**
+             * @var AbstractDaemonTask $task
+             */
+            $task = array_shift($this->taskContainer);
+            try {
+                $task->run();
+                sleep(15);
+            } catch (Throwable $e) {
+                $task->runningWithExp();
+                $this->logExp($e);
+            }
+            if ($task->isLiving()) {
+                $this->taskContainer[] = $task;
+            }
+        }
     }
 
     /**
@@ -162,5 +205,37 @@ class Daemon
     {
         echo $msg;
         exit;
+    }
+
+    /**
+     * 初始化优雅关机
+     * @param string $taskName
+     */
+    private function initElegantStopUtil(string $taskName)
+    {
+        $getElegantStopUtils   = function ($taskName) {
+            $this->taskName = $taskName;
+            return $this;
+        };
+        $elegantStopUtil       = ElegantStopUtils::instance();
+        $this->elegantStopUtil = $getElegantStopUtils->call($elegantStopUtil, $taskName);
+    }
+
+
+    /**
+     * 记录异常日志
+     * @param Throwable $e
+     */
+    private function logExp(Throwable $e)
+    {
+        $this->isExp = true;
+        $dateTime    = date('Y-m-d H:i:s');
+        $file        = $e->getFile();
+        $line        = $e->getLine();
+        $msg         = $e->getMessage();
+        $trace       = $e->getTraceAsString();
+        $code        = $e->getCode();
+        $contents    = "$dateTime\t{$file}({$line})\t$code\t$msg\n$trace\n\n";
+        Stage::log('exp', $contents);
     }
 }

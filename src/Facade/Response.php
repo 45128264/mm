@@ -41,16 +41,21 @@ abstract class Response extends Facade
         $controller = '';
         $this->tickStart();
         try {
-            $router     = RouterContainer::instance()->getRequestRouter();
-            $controller = 'render' . $router->getResponseType() . 'Content';
-            if (!method_exists($this, $controller)) {
-                echo 'missing method=>' . $controller;
-                exit;
-            }
+            $router       = RouterContainer::instance()->getRequestRouter();
+            $responseType = $router->getResponseType();
             $this->router = $router;
-            $this->router->invokeBeforeMiddleware();
-            $content = $this->router->invokeController();
-            $this->$controller($content);
+            if ($responseType == 'console') {
+                $router->invokeController();
+            } else {
+                $controller = 'render' . $responseType . 'Content';
+                if (!method_exists($this, $controller)) {
+                    echo 'missing method=>' . $controller;
+                    exit;
+                }
+                $router->invokeBeforeMiddleware();
+                $content = $router->invokeController();
+                $this->$controller($content);
+            }
             $router->invokeAfterMiddleware();
             $this->tickEnd(60);
 
@@ -61,7 +66,6 @@ abstract class Response extends Facade
             } else {
                 echo '系统繁忙，请稍后再试';
             }
-            $this->terminate();
             throw $e;
         }
     }
@@ -185,7 +189,6 @@ abstract class Response extends Facade
      * @return mixed
      */
     abstract protected function renderJsonContentError(throwable $e);
-
 
     /**
      * 获取csrf对应的form变量名称

@@ -4,6 +4,7 @@ namespace Qyk\Mm\Provider;
 
 use Qyk\Mm\Facade\ErrorListener;
 use Qyk\Mm\Stage;
+use Qyk\Mm\Traits\SingletonTrait;
 use Throwable;
 
 /**
@@ -14,11 +15,6 @@ use Throwable;
 class ErrorListenerProvide extends ErrorListener
 {
     protected $isExp = false;
-    /**
-     * 配置
-     * @var []
-     */
-    private $config;
 
     /**
      * 开始监听异常

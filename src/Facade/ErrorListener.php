@@ -2,6 +2,8 @@
 
 namespace Qyk\Mm\Facade;
 
+use Qyk\Mm\Traits\SingletonTrait;
+
 /**
  * 错误监测
  * Class Cache
@@ -9,6 +11,8 @@ namespace Qyk\Mm\Facade;
  */
 abstract class ErrorListener extends Facade
 {
+    use SingletonTrait;
+
     /**
      * 获取当前服务对应名称，方便识别当前服务的类型
      * @return string

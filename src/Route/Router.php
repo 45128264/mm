@@ -267,8 +267,10 @@ class Router
 
     /**
      * 获取controller对应的文件路径
+     * @return array|null
+     * @throws \ReflectionException
      */
-    public function invokeController(): array
+    public function invokeController()
     {
         if (!isset($this->action['controller'])) {
             return call_user_func($this->action['uses'], []);
