@@ -1,6 +1,6 @@
 <?php
 
-namespace Conmand\Service;
+namespace Console\Service;
 
 use Qyk\Mm\Utils\AbstractDaemonTask;
 

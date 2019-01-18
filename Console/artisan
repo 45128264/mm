@@ -13,5 +13,5 @@ $_SERVER['REQUEST_URI']    = 'daemon/sender/start';
 
 define('DEBUG_PRINT', true);
 Stage::instance()
-    ->define('command', __DIR__, 'Conmand')
+    ->define('command', __DIR__, 'Console')
     ->run(new ShellApp());

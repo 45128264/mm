@@ -140,10 +140,11 @@ class RouterContainer
         $uri = trim($uri, '/');
         foreach ($this->routers[$method] as $uriRule => $router) {
             $uriRule = trim($uriRule, '/');
+            $uriRule = trim($uriRule, '.');
             preg_match_all('/{([^\{]+)}/', $uriRule, $matches);
             $alias   = null;
-            $search  = ['/'];
-            $replace = ['\/'];
+            $search  = ['/','.'];
+            $replace = ['\/','\.'];
             //如果有动态字段
             if (isset($matches[1][0])) {
                 $alias = (array)$matches[1];

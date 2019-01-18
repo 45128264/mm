@@ -75,12 +75,17 @@ class Router
      * @var string
      */
     protected $tplPath = '';
+    /**
+     * uri连接符
+     * @var string
+     */
+    protected $connector = '/';
 
     /**
      * 实例化一个路由
      * Router constructor.
-     * @param array|string  $methods
-     * @param string        $uri
+     * @param array|string $methods
+     * @param string $uri
      * @param Closure|array $action
      */
     public function __construct($methods, string $uri, $action)
@@ -96,22 +101,32 @@ class Router
      */
     public function bindParameters(array $attribute)
     {
-        if (isset($attribute['prefix'])) {
-            $prefix    = trim($attribute['prefix'], '/');
-            $this->uri = $prefix ? $prefix . '/' . $this->uri : $this->uri;
+        //连接符
+        if (isset($attribute['connector'])) {
+            $this->connector = $attribute['connector'];
         }
+        //uri前缀
+        if (isset($attribute['prefix'])) {
+            $prefix    = trim($attribute['prefix'], $this->connector);
+            $this->uri = $prefix ? $prefix . $this->connector . $this->uri : $this->uri;
+        }
+        //功能对应得命名空间
         if (isset($attribute['namespace'])) {
             $this->namespace = $attribute['namespace'];
         }
+        //前置中间件
         if (isset($attribute['middleware'])) {
             $this->middleware['before'] = (array)$attribute['middleware'];
         }
+        //前置中间件
         if (isset($attribute['before'])) {
             $this->middleware['before'] = (array)$attribute['before'];
         }
+        //后置中间件
         if (isset($attribute['after'])) {
             $this->middleware['after'] = (array)$attribute['after'];
         }
+        //模板渲染类型
         if (isset($attribute['response'])) {
             $this->response = $attribute['response'];
         }
@@ -329,7 +344,7 @@ class Router
 
     /**
      * 触发中间件
-     * @param array  $middlewares
+     * @param array $middlewares
      * @param string $key
      * @throws \Qyk\Mm\Exception\MiddlewareExp
      * @throws \ReflectionException

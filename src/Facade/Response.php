@@ -20,7 +20,7 @@ abstract class Response extends Facade
     /**
      * @var Router
      */
-    private $router;
+    protected $router;
 
     /**
      * 获取当前Facade对应别名
@@ -44,18 +44,14 @@ abstract class Response extends Facade
             $router       = RouterContainer::instance()->getRequestRouter();
             $responseType = $router->getResponseType();
             $this->router = $router;
-            if ($responseType == 'console') {
-                $router->invokeController();
-            } else {
-                $controller = 'render' . $responseType . 'Content';
-                if (!method_exists($this, $controller)) {
-                    echo 'missing method=>' . $controller;
-                    exit;
-                }
-                $router->invokeBeforeMiddleware();
-                $content = $router->invokeController();
-                $this->$controller($content);
+            $controller   = 'render' . $responseType . 'Content';
+            if (!method_exists($this, $controller)) {
+                echo 'missing method=>' . $controller;
+                exit;
             }
+            $router->invokeBeforeMiddleware();
+            $content = $router->invokeController();
+            $this->$controller($content);
             $router->invokeAfterMiddleware();
             $this->tickEnd(60);
 
@@ -161,34 +157,6 @@ abstract class Response extends Facade
         }
         return APP_TEMPLE_PATH . '/' . str_replace('.', '/', $alias) . '.php';
     }
-
-    /**
-     * 渲染html内容
-     * @param array $content
-     * @return mixed
-     */
-    abstract protected function renderHtmlContent(array $content);
-
-    /**
-     * 渲染html内容，失败
-     * @param Throwable $e
-     * @return mixed
-     */
-    abstract protected function renderHtmlContentError(throwable $e);
-
-    /**
-     * 渲染json内容
-     * @param array $content
-     * @return mixed
-     */
-    abstract protected function renderJsonContent(array $content);
-
-    /**
-     * 渲染json内容失败
-     * @param Throwable $e
-     * @return mixed
-     */
-    abstract protected function renderJsonContentError(throwable $e);
 
     /**
      * 获取csrf对应的form变量名称

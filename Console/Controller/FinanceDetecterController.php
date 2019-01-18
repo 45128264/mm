@@ -1,6 +1,6 @@
 <?php
 
-namespace Conmand\Controller;
+namespace Console\Controller;
 
 use Qyk\Mm\Utils\Daemon;
 

@@ -5,6 +5,6 @@
 //GET（SELECT）：从服务器查询，可以在服务器通过请求的参数区分查询的方式。 POST（CREATE）：在服务器新建一个资源，调用insert操作。 PUT（UPDATE）：在服务器更新资源，调用update操作。 PATCH（UPDATE）：在服务器更新资源（客户端提供改变的属性）
 use Qyk\Mm\Route\RouterRegister;
 
-RouterRegister::group(['prefix' => 'daemon', 'response' => 'console'], function () {
-    RouterRegister::get('sender/start', 'FinanceDetecterController@restart');
+RouterRegister::group(['prefix' => 'daemon', 'connector' => '.'], function () {
+    RouterRegister::get('sender.start', 'FinanceDetecterController@restart');
 });
