@@ -1,14 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-namespace Test;
+namespace Console;
 
 use Qyk\Mm\Stage;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $_SERVER['REQUEST_METHOD'] = 'GET';
-$_SERVER['REQUEST_URI']    = 'daemon/sender/start';
+$_SERVER['REQUEST_URI']    = 'daemon.sender.start';
 //users/{user_id}/{card_id}/card
 
 define('DEBUG_PRINT', true);

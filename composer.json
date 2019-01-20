@@ -28,5 +28,9 @@
       "Test\\": "Test",
       "Console\\": "Console"
     }
+  },
+  "scripts": {
+    "winUp": "composer up --ignore-platform-reqs",
+    "help": "composer run winUp"
   }
 }
