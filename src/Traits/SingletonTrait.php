@@ -26,7 +26,6 @@ trait SingletonTrait
      */
     protected function __construct(string $aliasName = null)
     {
-
     }
 
     /**

@@ -6,7 +6,7 @@
  * Time: 15:35
  */
 
-namespace Qyk\Mm\Utils;
+namespace Qyk\Mm\Utils\Daemon;
 
 /**
  * 守护任务基类

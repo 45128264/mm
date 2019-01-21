@@ -42,12 +42,13 @@ class Container
             if (is_string($concrete)) {
                 $reflector = new ReflectionClass($concrete);
                 if (!$isCanCallAble = $reflector->isInstantiable()) {
-                    $msg = 'abstract is cant callable=>' . $abstract;
+
+                    $msg = 'abstract is could not callable=>' . $abstract;
                 } else {
                     $concrete = $reflector->newInstance();
                 }
             } elseif ($isCanCallAble = $concrete instanceof Closure) {
-                $msg = 'abstract is cant callable=>' . $abstract;
+                $msg = 'abstract is could not callable=>' . $abstract;
             }
             if (!$isCanCallAble) {
                 echo $msg;

@@ -3,7 +3,7 @@
 namespace Console\Controller;
 
 use Console\Service\DaemonFinanceDetector;
-use Qyk\Mm\Utils\Daemon;
+use Qyk\Mm\Utils\Daemon\Daemon;
 
 /**
  * Created by PhpStorm.

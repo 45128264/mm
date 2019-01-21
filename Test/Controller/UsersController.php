@@ -8,11 +8,10 @@
 
 namespace Test\Controller;
 
-use http\Exception;
-use Qyk\Mm\Dao\Mysql\MysqlTransaction;
 use Qyk\Mm\Dao\Redis\RedisHelper;
+use Qyk\Mm\Provider\SessionProvider;
+use Qyk\Mm\Stage;
 use Qyk\Mm\Traits\DebugTrait;
-use Test\Dao\Project1Table;
 use Test\Dao\ProjectTable;
 
 /**
@@ -23,6 +22,7 @@ use Test\Dao\ProjectTable;
 class UsersController
 {
     use DebugTrait;
+
     public function login()
     {
         return [
@@ -40,6 +40,13 @@ class UsersController
 
     public function cardDetail(int $userId, int $cardId)
     {
+
+        Stage::app()->session->set('user', ['id' => 105, 'name' => 'hello world']);
+        Stage::app()->session->set('user.tel', ['phone' => 1222, 'mobile' => 'xxx']);
+        $rt = Stage::app()->session->get('user.tel.mobile');
+        var_dump($rt);
+        exit;
+
 
         //        MysqlTransaction::instance()->auto([$this, 'test']);
         $help = RedisHelper::instance();

@@ -6,10 +6,9 @@
  * Time: 15:11
  */
 
-namespace Qyk\Mm\Utils;
+namespace Qyk\Mm\Utils\Daemon;
 
 use Qyk\Mm\Dao\Redis\RedisHelper;
-use Qyk\Mm\Traits\SingletonTrait;
 
 /**
  * 优雅关机

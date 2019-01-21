@@ -6,7 +6,7 @@
  * Time: 15:17
  */
 
-namespace Qyk\Mm\Utils;
+namespace Qyk\Mm\Utils\Daemon;
 
 use Qyk\Mm\Stage;
 use Throwable;

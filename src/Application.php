@@ -2,7 +2,6 @@
 
 namespace Qyk\Mm;
 
-use Closure;
 use Qyk\Mm\Facade\Config;
 use Qyk\Mm\Facade\Request;
 use Qyk\Mm\Facade\Response;
