@@ -28,6 +28,12 @@ class DaemonFinanceDetector extends AbstractDaemonTask
     public function test()
     {
         echo PHP_EOL . 'this is test' . PHP_EOL;
+        $i = 100;
+        while ($i) {
+            echo $i . PHP_EOL;
+            $i--;
+            sleep(1);
+        }
     }
 
     /**

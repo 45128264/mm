@@ -67,13 +67,13 @@ class ElegantStopUtils
         if ($this->redis->exists($this->keyRunning)) {
             $this->redis->set($this->keyTerminate, date('Y-m-d H:i:s'), ['ex' => $cacheTimeOut]);
             while ($this->redis->exists($this->keyRunning) && $timeout) {
-                echo 'this daemon task is waiting to stop...' . $timeout;
+                echo 'this daemon has old task, is waiting to stop...' . $timeout;
                 echo PHP_EOL;
                 sleep(1);
                 $timeout--;
             }
             if ($timeout == 0) {
-                echo 'fail to terminate task...';
+                echo 'fail to terminate old task...';
                 exit;
             }
             $this->redis->del($this->keyTerminate);
