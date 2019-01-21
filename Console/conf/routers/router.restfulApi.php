@@ -6,5 +6,7 @@
 use Qyk\Mm\Route\RouterRegister;
 
 RouterRegister::group(['prefix' => 'daemon', 'connector' => '.'], function () {
-    RouterRegister::get('sender.start', 'FinanceDetecterController@restart');
+    RouterRegister::get('sender.start', 'FinanceDetectorController@start');
+    RouterRegister::get('sender.stop', 'FinanceDetectorController@stop');
+    RouterRegister::get('sender.restart', 'FinanceDetectorController@restart');
 });

@@ -7,8 +7,13 @@ use Qyk\Mm\Stage;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+$uri = $argv[1] ?? '';
+if (!$uri) {
+    echo 'error,missing uri';
+    exit;
+}
 $_SERVER['REQUEST_METHOD'] = 'GET';
-$_SERVER['REQUEST_URI']    = 'daemon.sender.start';
+$_SERVER['REQUEST_URI']    = $uri;
 //users/{user_id}/{card_id}/card
 
 define('DEBUG_PRINT', true);

@@ -32,6 +32,8 @@ use Redis;
  * @method string append(string $key, string $value) 追加到原来值（value）的结尾。 如果 key 不存在，那么它将首先创建一个空字符串的key，再执行追加操作
  * @method string getRange(string $key, int $start, int $end) Return a substring of a larger string
  * @method int strlen(string $key) 返回key的string类型value的长度。如果key对应的非string类型，就返回错误
+ * @method bool exists(string $key) Verify if the specified key exists
+ * @method int del(string... $key) Remove specified keys.
  *
  *
  * @method int|bool hDel(string $key, string ...$hashKey) 从 key 指定的哈希集中移除指定的域。在哈希集中不存在的域将被忽略。

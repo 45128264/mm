@@ -10,15 +10,24 @@ use Qyk\Mm\Utils\AbstractDaemonTask;
  * Date: 2019/1/16
  * Time: 16:07
  */
-class DaemonFinanceDetecter extends AbstractDaemonTask
+class DaemonFinanceDetector extends AbstractDaemonTask
 {
+    protected $num = 0;
 
     /**
      * 公共执行入口
      */
     public function run()
     {
-        // TODO: Implement run() method.
+        $this->elegantStopUtil->autoTerminate([$this, 'test']);
+    }
+
+    /**
+     *
+     */
+    public function test()
+    {
+        echo PHP_EOL . 'this is test' . PHP_EOL;
     }
 
     /**
@@ -29,4 +38,15 @@ class DaemonFinanceDetecter extends AbstractDaemonTask
     {
         // TODO: Implement getTaskName() method.
     }
+
+    /**
+     * 判断任务是否已经执行完成
+     * @return bool
+     */
+    public function isLiving(): bool
+    {
+        return $this->num < 30;
+    }
+
+
 }

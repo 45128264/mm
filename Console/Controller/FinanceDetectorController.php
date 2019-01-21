@@ -2,6 +2,7 @@
 
 namespace Console\Controller;
 
+use Console\Service\DaemonFinanceDetector;
 use Qyk\Mm\Utils\Daemon;
 
 /**
@@ -10,7 +11,7 @@ use Qyk\Mm\Utils\Daemon;
  * Date: 2019/1/16
  * Time: 16:03
  */
-class FinanceDetecterController
+class FinanceDetectorController
 {
     /**
      * @var Daemon
@@ -19,8 +20,7 @@ class FinanceDetecterController
 
     public function __construct()
     {
-        // $this->daemonServer = new Daemon();
-        //  $this->bindTasks($this->getTasks());
+        $this->daemonServer = new Daemon('financeDetector');
     }
 
     /**
@@ -28,8 +28,9 @@ class FinanceDetecterController
      */
     public function restart()
     {
-        echo 'this is my test';
-        //        $this->daemonServer->restart();
+        echo 'this is my test,restart';
+        $this->bindTask();
+        $this->daemonServer->restart();
     }
 
     /**
@@ -37,6 +38,7 @@ class FinanceDetecterController
      */
     public function start()
     {
+        echo 'this is my test,start';
         $this->daemonServer->start();
     }
 
@@ -45,17 +47,16 @@ class FinanceDetecterController
      */
     public function stop()
     {
+        echo 'this is my test,stop';
         $this->daemonServer->stop();
     }
 
+
     /**
-     * 获取任务
+     * 绑定任务
      */
-    protected function getTasks(): array
+    private function bindTask()
     {
-        return [
-            DaemonFinanceDetecter::class,
-            DaemonFinanceDetecter2::class
-        ];
+        $this->daemonServer->bindTask(new DaemonFinanceDetector());
     }
 }

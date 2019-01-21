@@ -8,6 +8,7 @@
 
 namespace Qyk\Mm\Utils;
 
+use Qyk\Mm\Stage;
 use Throwable;
 
 /**
@@ -52,9 +53,9 @@ class Daemon
      */
     public function __construct(string $taskName)
     {
-        $this->initElegantStopUtil($taskName);
-        $this->initOldPidIsRunning();
         $this->pidFileLocation = '/tmp/daemon_' . $taskName . '.pid';
+        $this->elegantStopUtil =  new ElegantStopUtils($taskName);
+        $this->initOldPidIsRunning();
     }
 
     /**
@@ -65,7 +66,7 @@ class Daemon
     public function bindTask(AbstractDaemonTask $task)
     {
         $task->setElegantStopUtils($this->elegantStopUtil);
-        $this->taskContainer = array_merge($this->taskContainer, $task);
+        $this->taskContainer[] = $task;
         return $this;
     }
 
@@ -75,7 +76,7 @@ class Daemon
     public function start()
     {
         if ($this->isOldPidRunning) {
-            $this->throwExp('Daemon already running with PID:');
+            $this->throwExp('Daemon already running with PID:' . file_get_contents($this->pidFileLocation));
         }
         $this->fork();
         $this->setSid();
@@ -89,7 +90,6 @@ class Daemon
     public function restart()
     {
         $this->stop();
-        $this->elegantStopUtil->taskAttemptStart();
         $this->isOldPidRunning = false;
         $this->start();
     }
@@ -101,6 +101,10 @@ class Daemon
     {
         if ($this->isOldPidRunning) {
             $this->elegantStopUtil->taskTerminate();
+            $pid = file_get_contents($this->pidFileLocation);
+            if (posix_kill($pid, SIGKILL)) {
+                unlink($this->pidFileLocation);
+            }
         }
     }
 
@@ -121,9 +125,6 @@ class Daemon
         chdir('/');
         umask(0); // 修改文件模式，让进程有较大权限，保证进程有读写执行权限
         //关闭打开的文件描述符
-        fclose(STDIN);
-        fclose(STDOUT);
-        fclose(STDERR);
         file_put_contents($this->pidFileLocation, $pid);
     }
 
@@ -179,6 +180,7 @@ class Daemon
      */
     private function doTask()
     {
+        fclose(STDIN);
         while (!empty($this->taskContainer)) {
             /**
              * @var AbstractDaemonTask $task
@@ -186,12 +188,12 @@ class Daemon
             $task = array_shift($this->taskContainer);
             try {
                 $task->run();
-                sleep(15);
+                sleep(1);
             } catch (Throwable $e) {
                 $task->runningWithExp();
                 $this->logExp($e);
             }
-            if ($task->isLiving()) {
+            if ($task->isLiving() && !$task->isMaxExp()) {
                 $this->taskContainer[] = $task;
             }
         }
@@ -203,24 +205,9 @@ class Daemon
      */
     protected function throwExp($msg)
     {
-        echo $msg;
+        echo 'daemon.exp=>' . $msg;
         exit;
     }
-
-    /**
-     * 初始化优雅关机
-     * @param string $taskName
-     */
-    private function initElegantStopUtil(string $taskName)
-    {
-        $getElegantStopUtils   = function ($taskName) {
-            $this->taskName = $taskName;
-            return $this;
-        };
-        $elegantStopUtil       = ElegantStopUtils::instance();
-        $this->elegantStopUtil = $getElegantStopUtils->call($elegantStopUtil, $taskName);
-    }
-
 
     /**
      * 记录异常日志

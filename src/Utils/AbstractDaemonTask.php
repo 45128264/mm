@@ -36,13 +36,6 @@ abstract class AbstractDaemonTask
      */
     abstract public function run();
 
-    /**
-     * 优雅关机，在最小完整的功能模块里边调用， 尝试关闭当前的任务进程
-     */
-    protected function attemptTerminate()
-    {
-        $this->elegantStopUtil->attemptTerminate();
-    }
 
     /**
      * 获取当前任务名称
@@ -56,7 +49,16 @@ abstract class AbstractDaemonTask
      */
     public function isLiving(): bool
     {
-        return $this->maxThrowExpTimes > 0;
+        return true;
+    }
+
+    /**
+     * 是否运行中产生的异常数已经到达顶峰
+     * @return bool
+     */
+    public function isMaxExp(): bool
+    {
+        return $this->maxThrowExpTimes < 0;
     }
 
     /**
