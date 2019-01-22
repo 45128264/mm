@@ -84,8 +84,8 @@ class Router
     /**
      * 实例化一个路由
      * Router constructor.
-     * @param array|string $methods
-     * @param string $uri
+     * @param array|string  $methods
+     * @param string        $uri
      * @param Closure|array $action
      */
     public function __construct($methods, string $uri, $action)
@@ -109,6 +109,11 @@ class Router
         if (isset($attribute['prefix'])) {
             $prefix    = trim($attribute['prefix'], $this->connector);
             $this->uri = $prefix ? $prefix . $this->connector . $this->uri : $this->uri;
+        }
+        //uri后缀
+        if (isset($attribute['suffix'])) {
+            $suffix    = trim($attribute['suffix'], $this->connector);
+            $this->uri = $suffix ? $this->uri . $suffix : $this->uri;
         }
         //功能对应得命名空间
         if (isset($attribute['namespace'])) {
@@ -344,7 +349,7 @@ class Router
 
     /**
      * 触发中间件
-     * @param array $middlewares
+     * @param array  $middlewares
      * @param string $key
      * @throws \Qyk\Mm\Exception\MiddlewareExp
      * @throws \ReflectionException

@@ -28,5 +28,16 @@ return [
             'host' => '127.0.0.1',
             'port' => 6379
         ],
-    ]
+        'session' => [
+            'host'       => '127.0.0.1',
+            'port'       => 6379,
+            'database'   => 1,                         //库编号
+            'persistent' => 1,                         //持久化
+        ],
+    ],
+    'session' => [
+        'maxLifeTime' => 6 * 3600,                      // session的失效时间
+        'driver'      => 'Redis',                       // session的存储介质(暂只扩展redis)，默认为本地文件
+        'driverConf'  => 'app.redis.session',           // 存储介质对应的配置
+    ],
 ];

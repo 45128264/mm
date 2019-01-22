@@ -13,8 +13,6 @@ trait ConnectServiceTrait
 {
     public function __destruct()
     {
-        echo PHP_EOL;
-        echo get_called_class() . '析构函数' . PHP_EOL;
         $this->close();
     }
 

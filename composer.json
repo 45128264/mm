@@ -20,7 +20,9 @@
     "php-amqplib/php-amqplib": "^2.8@dev",
     "ext-mysqli": "*",
     "ext-posix": "*",
-    "ext-pcntl": "*"
+    "ext-pcntl": "*",
+    "ext-curl": "*",
+    "ext-gd": "*"
   },
   "autoload": {
     "psr-4": {

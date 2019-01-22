@@ -44,14 +44,19 @@ abstract class Response extends Facade
             $router       = RouterContainer::instance()->getRequestRouter();
             $responseType = $router->getResponseType();
             $this->router = $router;
-            $controller   = 'render' . $responseType . 'Content';
-            if (!method_exists($this, $controller)) {
-                echo 'missing method=>' . $controller;
-                exit;
+            if (!$isNoneResponseType = $responseType == 'none') {
+                $controller = 'render' . $responseType . 'Content';
+                if (!method_exists($this, $controller)) {
+                    echo 'missing method=>' . $controller;
+                    exit;
+                }
             }
             $router->invokeBeforeMiddleware();
-            $content = $router->invokeController();
-            $this->$controller($content);
+            if ($isNoneResponseType) {
+                $router->invokeController();
+            } else {
+                $this->$controller($router->invokeController());
+            }
             $router->invokeAfterMiddleware();
             $this->tickEnd(60);
 

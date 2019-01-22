@@ -12,7 +12,7 @@
 
 use Qyk\Mm\Route\RouterRegister;
 
-RouterRegister::group(['prefix' => 'users'], function () {
+RouterRegister::group(['prefix' => 'users', 'suffix' => '.html'], function () {
     //未登陆
     RouterRegister::group(['middleware' => 'unLogon'], function () {
         RouterRegister::post('login', 'UsersController@login');
@@ -23,6 +23,13 @@ RouterRegister::group(['prefix' => 'users'], function () {
         //        RouterRegister::get('logout', 'UsersController@logout');
         //        RouterRegister::get('{user_id}/card', 'UsersController@cardList');
         RouterRegister::any('{user_id}/{card_id}/card', 'UsersController@cardDetail')->response('json');
+        RouterRegister::get('session/save', 'UsersController@sessionSave')->response('json');
+        RouterRegister::get('session/show', 'UsersController@sessionShow')->response('json');
+
+        RouterRegister::get('curl/get', 'UsersController@curlGetClient')->response('json');
+        RouterRegister::get('curl/service', 'UsersController@curlGetServer')->response('json');
+        RouterRegister::get('captcha/index', 'UsersController@captchaIndex')->response('none');
+        RouterRegister::get('captcha/verify/{code}', 'UsersController@captchaVerrify')->response('none');
         //        RouterRegister::post('card', 'UsersController@addCard');
         //        RouterRegister::put('card', 'UsersController@editCard');
         //        RouterRegister::patch('avatar', 'UsersController@avatar');

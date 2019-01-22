@@ -14,7 +14,6 @@ use Qyk\Mm\Traits\SingletonTrait;
  * @method bool get(string $key, string $keyMarker = '.')  获取指定的key数据，允许多层连接, $keyMarker 层级字段分隔符
  * @method bool unset(string $key, string $keyMarker = '.')  删除指定的key数据，允许多层连接, $keyMarker 层级字段分隔符
  * @method void clear() 清空
- * @method $this iniSet() 使用app.conf里边的session字段的配置
  */
 abstract class Session extends Facade
 {
@@ -81,15 +80,53 @@ abstract class Session extends Facade
     abstract protected function doneGet(string $key, string $keyMarker = '.');
 
     /**
-     * 清空
-     */
-    abstract protected function doneClear();
-
-    /**
      * 设置session的全局
      * @return $this
      */
     abstract protected function doneIniSet();
+
+    /**
+     * session start
+     * @return void
+     */
+    abstract protected function start();
+
+
+    /**
+     * 清空
+     */
+    protected function doneClear()
+    {
+        $_SESSION = [];
+    }
+
+    /**
+     * session是否是启用中
+     * @return bool
+     */
+    protected function isActive(): bool
+    {
+        return session_status() == PHP_SESSION_ACTIVE;
+    }
+
+    /**
+     * 关闭,防止session死锁
+     */
+    protected function close()
+    {
+        if ($this->isActive()) {
+            session_write_close();
+        }
+    }
+
+    /**
+     * 获取sessionId
+     * @return string
+     */
+    public function getSid(): string
+    {
+        return session_id();
+    }
 
     /**
      * 魔法函数

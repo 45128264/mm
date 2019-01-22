@@ -86,5 +86,4 @@ class ResponseProvider extends Response
         }
         $this->renderJsonContent($contents);
     }
-
 }
