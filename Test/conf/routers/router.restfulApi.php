@@ -30,6 +30,7 @@ RouterRegister::group(['prefix' => 'users', 'suffix' => '.html'], function () {
         RouterRegister::get('curl/service', 'UsersController@curlGetServer')->response('json');
         RouterRegister::get('captcha/index', 'UsersController@captchaIndex')->response('none');
         RouterRegister::get('captcha/verify/{code}', 'UsersController@captchaVerrify')->response('none');
+        RouterRegister::get('excel/exp', 'UsersController@excelExp')->response('none');
         //        RouterRegister::post('card', 'UsersController@addCard');
         //        RouterRegister::put('card', 'UsersController@editCard');
         //        RouterRegister::patch('avatar', 'UsersController@avatar');

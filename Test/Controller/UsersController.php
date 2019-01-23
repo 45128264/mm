@@ -8,11 +8,14 @@
 
 namespace Test\Controller;
 
+use PHPExcel;
+use PHPExcel_IOFactory;
 use Qyk\Mm\Dao\Redis\RedisHelper;
-use Qyk\Mm\Provider\SessionProvider;
 use Qyk\Mm\Stage;
 use Qyk\Mm\Traits\DebugTrait;
 use Qyk\Mm\Utils\Captcha\Captcha;
+use Qyk\Mm\Utils\ExcelHelper;
+use Qyk\Mm\Utils\FileHelper;
 use Qyk\Mm\Utils\HttpCurl;
 use Test\Dao\ProjectTable;
 
@@ -110,6 +113,34 @@ class UsersController
         $rt = (new Captcha)
             ->validate($code);
         var_dump($rt);
+    }
+
+    /**
+     *
+     * @throws \PHPExcel_Exception
+     */
+    public function excelExp()
+    {
+        $tittle  = ['user_id' => '用户编号', 'user_name' => '用户名'];
+        $data    = [
+            ['user_id' => '1', 'user_name' => 'qyk1'],
+            ['user_id' => '2', 'user_name' => 'qyk2'],
+        ];
+        $saveDir = dirname(APP_PATH) . DS . 'storage' . DS;
+
+        ExcelHelper::instance()
+            ->create('it', $tittle, $data)
+            ->store($saveDir . '1.xls', 'xls')
+            ->refresh()
+            ->create('it', $tittle, $data)
+            ->store($saveDir . '2.xls', 'xls')
+            ->refresh()
+            ->create('it', $tittle, $data)
+            ->store($saveDir . '3.xls', 'xls');
+
+        (new FileHelper())
+            ->groupZip($saveDir . 'test.zip', $saveDir . '1.xls', $saveDir . '2.xls', $saveDir . '3.xls')
+            ->exportBinary('zip', 'test.zip', $saveDir . 'test.zip');
 
     }
 }

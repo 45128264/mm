@@ -40,4 +40,7 @@ return [
         'driver'      => 'Redis',                       // session的存储介质(暂只扩展redis)，默认为本地文件
         'driverConf'  => 'app.redis.session',           // 存储介质对应的配置
     ],
+    'excel'   => [
+        'savePath' => APP_PATH . DS . 'storage/excel',
+    ],
 ];

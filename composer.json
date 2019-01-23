@@ -18,11 +18,13 @@
     "monolog/monolog": "1.x-dev",
     "apache/thrift": "^1.0@dev",
     "php-amqplib/php-amqplib": "^2.8@dev",
+    "phpoffice/phpexcel": "^1.8.2",
     "ext-mysqli": "*",
     "ext-posix": "*",
     "ext-pcntl": "*",
     "ext-curl": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-zip": "*"
   },
   "autoload": {
     "psr-4": {
