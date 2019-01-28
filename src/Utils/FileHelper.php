@@ -54,6 +54,7 @@ class FileHelper
         if ($zip->open($zipPath, $zipType) === true) {
             foreach ($filePath as $item) {
                 $zip->addFile($item);
+                $zip->renameName($item, pathinfo($item)['basename']);
             }
             $zip->close();
             if ($isRemoveSource) {
@@ -70,8 +71,9 @@ class FileHelper
      * @param string $contentType 文件内容类型
      * @param string $filename 导出文件名
      * @param string $filePath 源文件路径
+     * @param bool   $isRemoveSource
      */
-    public function exportBinary(string $contentType, string $filename, string $filePath)
+    public function exportBinary(string $contentType, string $filename, string $filePath, bool $isRemoveSource = false)
     {
         // Redirect output to a client’s web browser
         header('Content-Type: application/' . $contentType);
@@ -88,5 +90,12 @@ class FileHelper
         header("Content-Transfer-Encoding: binary");//声明一个下载的文件
         header('Content-Length: ' . filesize($filePath));//声明文件大小
         readfile($filePath);
+
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        }
+        if ($isRemoveSource) {
+            unlink($filePath);
+        }
     }
 }

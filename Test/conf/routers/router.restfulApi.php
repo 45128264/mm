@@ -22,7 +22,7 @@ RouterRegister::group(['prefix' => 'users', 'suffix' => '.html'], function () {
     RouterRegister::group(['middleware' => ['logined', 'checkRolePermission']], function () {
         //        RouterRegister::get('logout', 'UsersController@logout');
         //        RouterRegister::get('{user_id}/card', 'UsersController@cardList');
-        RouterRegister::any('{user_id}/{card_id}/card', 'UsersController@cardDetail')->response('json');
+        RouterRegister::any('{pageSize}/{user_id}/{card_id}/card', 'UsersController@cardDetail')->setDefaultVal(['pageSize' => '1'])->response('json');
         RouterRegister::get('session/save', 'UsersController@sessionSave')->response('json');
         RouterRegister::get('session/show', 'UsersController@sessionShow')->response('json');
 

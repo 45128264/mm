@@ -326,9 +326,20 @@ class Router
     /**
      * 获取传递的参数
      */
-    protected function getParameters(): array
+    public function getParameters(): array
     {
         return array_merge($this->defaultParameter, $this->uriParams);
+    }
+
+    /**
+     * 设置默认值
+     * @param array $params
+     * @return Router
+     */
+    public function setDefaultVal(array $params)
+    {
+        $this->defaultParameter = array_merge($this->defaultParameter, $params);
+        return $this;
     }
 
     /**

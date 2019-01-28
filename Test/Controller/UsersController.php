@@ -8,8 +8,6 @@
 
 namespace Test\Controller;
 
-use PHPExcel;
-use PHPExcel_IOFactory;
 use Qyk\Mm\Dao\Redis\RedisHelper;
 use Qyk\Mm\Stage;
 use Qyk\Mm\Traits\DebugTrait;
@@ -17,6 +15,7 @@ use Qyk\Mm\Utils\Captcha\Captcha;
 use Qyk\Mm\Utils\ExcelHelper;
 use Qyk\Mm\Utils\FileHelper;
 use Qyk\Mm\Utils\HttpCurl;
+use Qyk\Mm\Utils\Paginate;
 use Test\Dao\ProjectTable;
 
 /**
@@ -43,8 +42,24 @@ class UsersController
         ];
     }
 
+    /**
+     * @param int $userId
+     * @param int $cardId
+     * @return array
+     */
     public function cardDetail(int $userId, int $cardId)
     {
+        $rt = Paginate::instance()
+            ->setListInfo(100, 5, 10, 10)
+            ->setMethod('xx')
+            ->setUriParams([])
+            ->getHtml();
+        echo $rt;
+        exit;
+        echo htmlentities($rt);
+        exit;
+
+
         //        MysqlTransaction::instance()->auto([$this, 'test']);
         $help = RedisHelper::instance();
         //        $rt = RedisHelper::instance()->set('test1', 121, ['nx', 'ex' => 10]);
@@ -138,9 +153,14 @@ class UsersController
             ->create('it', $tittle, $data)
             ->store($saveDir . '3.xls', 'xls');
 
+        $files = [
+            $saveDir . '1.xls',
+            $saveDir . '2.xls',
+            $saveDir . '3.xls',
+        ];
         (new FileHelper())
-            ->groupZip($saveDir . 'test.zip', $saveDir . '1.xls', $saveDir . '2.xls', $saveDir . '3.xls')
-            ->exportBinary('zip', 'test.zip', $saveDir . 'test.zip');
+            ->groupZip($saveDir . 'test.zip', true, ...$files)
+            ->exportBinary('zip', 'test.zip', $saveDir . 'test.zip', true);
 
     }
 }

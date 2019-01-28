@@ -2,6 +2,7 @@
 
 namespace Qyk\Mm\Route;
 
+use Exception;
 use Qyk\Mm\Traits\SingletonTrait;
 use Qyk\Mm\Stage;
 
@@ -30,6 +31,11 @@ class RouterContainer
      * @var array
      */
     protected $actionList = [];
+    /**
+     * 当前request对应的路由
+     * @var Router
+     */
+    protected $activeRouter;
 
     /**
      * 注入容器
@@ -123,7 +129,8 @@ class RouterContainer
             echo 'not found http uri';
             exit;
         }
-        return $this->getRouterByUri($uri, $method);
+        $this->activeRouter = $this->getRouterByUri($uri, $method);
+        return $this->activeRouter;
     }
 
     /**
@@ -143,8 +150,8 @@ class RouterContainer
             $uriRule = trim($uriRule, '.');
             preg_match_all('/{([^\{]+)}/', $uriRule, $matches);
             $alias   = null;
-            $search  = ['/','.'];
-            $replace = ['\/','\.'];
+            $search  = ['/', '.'];
+            $replace = ['\/', '\.'];
             //如果有动态字段
             if (isset($matches[1][0])) {
                 $alias = (array)$matches[1];
@@ -166,6 +173,78 @@ class RouterContainer
         }
         echo 'not found http request method => ' . $uri;
         exit;
+    }
+
+    //endregion
+
+    //region 获取路由路径
+    /**
+     * 根据method获取uri
+     * @param string $method
+     * @param array  $query
+     * @return string
+     * @throws Exception
+     */
+    public function getUriByMethod(string $method = '', array $query = [])
+    {
+        if ($method) {
+            $router = $this->actionList[$method] ?? '';
+        } else {
+            $router = $this->activeRouter;
+        }
+        if (!$router) {
+            return '';
+        }
+        return $this->parseUri($router, $query);
+    }
+
+    /**
+     * 根据路由规则与参数，生成uri
+     * @param Router $router
+     * @param array  $params
+     * @return string
+     * @throws Exception
+     */
+    protected function parseUri(Router $router, array $params = [])
+    {
+        $allParams = array_merge($router->getParameters(), $params);
+        $uriRule   = $router->getUri();
+        preg_match_all('/{([^\{]+)}/', $uriRule, $matches);
+        $alias  = null;
+        $search = [];
+        //如果有动态字段
+        if (isset($matches[1][0])) {
+            $alias = (array)$matches[1];
+            foreach ($alias as $tmp) {
+                $search[] = '{' . $tmp . '}';
+                if (!isset($allParams[$tmp])) {
+                    throw new Exception('missing column =>' . $tmp . ' \'s value');
+                }
+                $replace[] = $allParams[$tmp];
+                unset($params[$tmp]);
+            }
+        }
+        $uri = str_replace($search, $replace, $uriRule);
+        if ($params) {
+            $uri .= '?' . http_build_query($params);
+        }
+        return $uri;
+    }
+
+    /**
+     * 根据alias获取uri
+     * @param string $alias
+     * @param array  $params 参数
+     * @return string
+     * @throws Exception
+     */
+    public function getUriByAlias(string $alias, array $params = [])
+    {
+        $router = $this->aliasList[$alias] ?? '';
+        if (!$router) {
+            return '';
+        }
+        return $this->parseUri($router, $query);
     }
     //endregion
 }

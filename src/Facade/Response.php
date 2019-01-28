@@ -57,6 +57,10 @@ abstract class Response extends Facade
             } else {
                 $this->$controller($router->invokeController());
             }
+            if (function_exists('fastcgi_finish_request')) {
+                // 提高页面响应
+                fastcgi_finish_request();
+            }
             $router->invokeAfterMiddleware();
             $this->tickEnd(60);
 
