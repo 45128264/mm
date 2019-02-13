@@ -19,7 +19,7 @@ RouterRegister::group(['prefix' => 'users', 'suffix' => '.html'], function () {
         RouterRegister::post('register', 'UsersController@register');
     });
     //已登陆
-    RouterRegister::group(['middleware' => ['logined', 'checkRolePermission']], function () {
+    RouterRegister::group(['middleware' => ['logined', 'checkRolePermission'], 'after' => ['logVisitedHistory']], function () {
         //        RouterRegister::get('logout', 'UsersController@logout');
         //        RouterRegister::get('{user_id}/card', 'UsersController@cardList');
         RouterRegister::any('{pageSize}/{user_id}/{card_id}/card', 'UsersController@cardDetail')->setDefaultVal(['pageSize' => '1'])->response('json');
