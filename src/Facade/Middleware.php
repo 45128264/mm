@@ -8,6 +8,7 @@
 
 namespace Qyk\Mm\Facade;
 
+use Exception;
 use Qyk\Mm\Exception\MiddlewareExp;
 
 /**
@@ -44,7 +45,12 @@ abstract class Middleware extends Facade
      */
     final public function run()
     {
-        if (!$this->handle()) {
+        try {
+            $rt = $this->handle();
+        } catch (Exception $e) {
+            $rt = false;
+        }
+        if (!$rt) {
             throw new MiddlewareExp(...$this->getExpParams());
         }
     }
