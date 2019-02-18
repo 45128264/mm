@@ -102,6 +102,7 @@ abstract class Request extends Facade
     {
         switch (true) {
             case ($tmpIP = $_SERVER['HTTP_X_FORWARDED_FOR']) && strcasecmp($tmpIP, 'unknow'):
+            case ($tmpIP = $_SERVER['HTTP_X_REAL_IP']) && strcasecmp($tmpIP, 'unknow'):
             case ($tmpIP = $_SERVER['HTTP_CLIENT_IP']) && strcasecmp($tmpIP, 'unknow'):
             case ($tmpIP = $_SERVER['REMOTE_ADDR']) && strcasecmp($tmpIP, 'unknow'):
                 $ip = $tmpIP;
